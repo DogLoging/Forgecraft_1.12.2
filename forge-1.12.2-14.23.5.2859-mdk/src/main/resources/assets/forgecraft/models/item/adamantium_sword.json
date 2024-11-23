@@ -1,0 +1,7 @@
+{
+	"parent": "item/handheld",
+	"textures":
+	{
+		"layer0": "forgecraft:items/weapons/adamantium_sword"
+	}
+}

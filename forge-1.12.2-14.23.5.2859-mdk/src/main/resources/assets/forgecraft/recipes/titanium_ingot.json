@@ -1,0 +1,21 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern":
+	[
+		"#"
+	],
+	
+	"key":
+	{
+		"#":
+		{
+			"item": "forgecraft:titanium_block"
+		}
+	},
+	
+	"result":
+	{
+		"item": "forgecraft:titanium_ingot",
+		"count": 9
+	}
+}
