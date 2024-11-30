@@ -1,0 +1,10 @@
+{
+	"parent": "block/orientable",
+	"textures":
+	{
+		"front": "forgecraft:blocks/fusion_furnace_front",
+		"top": "forgecraft:blocks/fusion_furnace_top",
+		"side": "forgecraft:blocks/fusion_furnace_side",
+		"down": "forgecraft:blocks/fusion_furnace_bottom"
+	}
+}

@@ -1,0 +1,24 @@
+{
+	"variants":
+	{
+		"facing=north":
+		{
+			"model": "forgecraft:block/fusion_furnace"
+		},
+		
+		"facing=south":
+		{
+			"model": "forgecraft:block/fusion_furnace"
+		},
+		
+		"facing=west":
+		{
+			"model": "forgecraft:block/fusion_furnace"
+		},
+		
+		"facing=east":
+		{
+			"model": "forgecraft:block/fusion_furnace"
+		}
+	}
+}

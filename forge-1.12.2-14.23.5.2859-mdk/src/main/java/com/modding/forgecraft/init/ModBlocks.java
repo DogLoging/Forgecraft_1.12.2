@@ -17,8 +17,8 @@ public class ModBlocks
 	public static Block fusion_furnace;
 	
 	public static int id;
-	public static Block[] listBlock = new Block[4];
-	public static Item[] listItem = new Item[4];
+	public static Block[] listBlock = new Block[5];
+	public static Item[] listItem = new Item[5];
 	
 	public static void initialization()
 	{
@@ -27,7 +27,7 @@ public class ModBlocks
 		titanium_block = register("titanium_block", new Block(Material.IRON).setCreativeTab(CreativeTabs.BUILDING_BLOCKS));
 		adamantium_block = register("adamantium_block", new Block(Material.IRON).setCreativeTab(CreativeTabs.BUILDING_BLOCKS));
 	
-		fusion_furnace = register("fusion_furnace", new BlockFusionFurnace());
+		fusion_furnace = register("fusion_furnace", new BlockFusionFurnace().setCreativeTab(CreativeTabs.DECORATIONS));
 	}
 	
 	public static void registerBlock(IForgeRegistry<Block> register)
