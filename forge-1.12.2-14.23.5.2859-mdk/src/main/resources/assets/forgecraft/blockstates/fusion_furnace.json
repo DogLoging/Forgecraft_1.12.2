@@ -3,22 +3,25 @@
 	{
 		"facing=north":
 		{
-			"model": "forgecraft:block/fusion_furnace"
+			"model": "forgecraft:fusion_furnace"
 		},
 		
 		"facing=south":
 		{
-			"model": "forgecraft:block/fusion_furnace"
+			"model": "forgecraft:fusion_furnace",
+			"y": 180
 		},
 		
 		"facing=west":
 		{
-			"model": "forgecraft:block/fusion_furnace"
+			"model": "forgecraft:fusion_furnace",
+			"y": 270
 		},
 		
 		"facing=east":
 		{
-			"model": "forgecraft:block/fusion_furnace"
+			"model": "forgecraft:fusion_furnace",
+			"y": 90
 		}
 	}
 }
