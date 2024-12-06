@@ -3,6 +3,7 @@ package com.modding.forgecraft;
 import com.modding.forgecraft.init.ModBlocks;
 import com.modding.forgecraft.proxy.CommonProxy;
 import com.modding.forgecraft.register.ModRegistryEvent;
+import com.modding.forgecraft.tile.RegistryTileEntity;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -37,6 +38,8 @@ public class Main
 	@EventHandler
 	public static void init(FMLInitializationEvent event)
 	{
+		RegistryTileEntity.initialization();
+		
 		proxy.init();
 	}
 	
