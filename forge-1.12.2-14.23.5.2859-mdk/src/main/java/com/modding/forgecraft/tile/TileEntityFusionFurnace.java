@@ -1,5 +1,7 @@
 package com.modding.forgecraft.tile;
 
+import com.modding.forgecraft.inventory.ContainerFusionFurnace;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
@@ -12,24 +14,30 @@ import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityFusionFurnace extends TileEntityLockable implements IInventory, ISidedInventory, ITickable
 {
 	public enum slotEnum
 	{
-		INPUT_SLOT, OUTPUT_SLOT
+		INPUT_SLOT1, INPUT_SLOT2, INPUT_FUEL, OUTPUT_SLOT
 	}
 	
 	private static final int[] slot_top = new int[]
 			{
-					slotEnum.INPUT_SLOT.ordinal()
+					slotEnum.INPUT_SLOT1.ordinal(),
+					slotEnum.INPUT_SLOT2.ordinal()
 			};
 	private static final int[] slot_bottom = new int[]
 			{
-					slotEnum.OUTPUT_SLOT.ordinal()
+					slotEnum.INPUT_FUEL.ordinal()
 			};
 	
-	private static final int[] slot_side = new int[] {};
+	private static final int[] slot_side = new int[]
+			{
+					slotEnum.OUTPUT_SLOT.ordinal()
+			};
 	
     private NonNullList<ItemStack> itemStackArray = NonNullList.<ItemStack>withSize(4, ItemStack.EMPTY);
 	
@@ -98,7 +106,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 			stack.setCount(this.getInventoryStackLimit());
 		}
 		
-		if(index == slotEnum.INPUT_SLOT.ordinal() && !isAlreadyInSlot)
+		if(index == slotEnum.INPUT_SLOT1.ordinal() && index == slotEnum.INPUT_SLOT2.ordinal() && !isAlreadyInSlot)
 		{
 			totalFusionTime = timeFusion;
 			timeFusion = 0;
@@ -127,7 +135,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	@Override
 	public boolean isItemValidForSlot(int index, ItemStack stack)
 	{
-		return index == slotEnum.INPUT_SLOT.ordinal() ? true : false;
+		return index == slotEnum.INPUT_SLOT1.ordinal() && index == slotEnum.INPUT_SLOT2.ordinal() ? true : false;
 	}
 
 	@Override
@@ -253,7 +261,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	@Override
 	public Container createContainer(InventoryPlayer playerInventory, EntityPlayer playerIn)
 	{
-		return null;
+		return new ContainerFusionFurnace(playerInventory, this);
 	}
 
 	@Override
@@ -279,11 +287,25 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	{
 		return true;
 	}
+	
+	public boolean isFuel()
+	{
+		return this.fuelFusionFurnace > 0;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static boolean isFuel(IInventory inventory)
+	{
+		return inventory.getField(0) > 0;
+	}
 
 	@Override
 	public void update()
 	{
-		
+		if(isFuel())
+		{
+			
+		}
 	}
 	
 }
