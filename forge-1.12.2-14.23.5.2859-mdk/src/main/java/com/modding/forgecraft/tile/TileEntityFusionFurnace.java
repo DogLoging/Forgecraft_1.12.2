@@ -20,6 +20,17 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		INPUT_SLOT, OUTPUT_SLOT
 	}
 	
+	private static final int[] slot_top = new int[]
+			{
+					slotEnum.INPUT_SLOT.ordinal()
+			};
+	private static final int[] slot_bottom = new int[]
+			{
+					slotEnum.OUTPUT_SLOT.ordinal()
+			};
+	
+	private static final int[] slot_side = new int[] {};
+	
     private NonNullList<ItemStack> itemStackArray = NonNullList.<ItemStack>withSize(4, ItemStack.EMPTY);
 	
 	private int fuelFusionFurnace;
@@ -37,17 +48,6 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	
 	private String tileEntityName;
 	
-	private static final int[] slot_top = new int[]
-			{
-					slotEnum.INPUT_SLOT.ordinal()
-			};
-	private static final int[] slot_bottom = new int[]
-			{
-					slotEnum.OUTPUT_SLOT.ordinal()
-			};
-	
-	private static final int[] slot_side = new int[] {};
-	
 	@Override
 	public int getSizeInventory()
 	{
@@ -57,7 +57,15 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	@Override
 	public boolean isEmpty()
 	{
-		return false;
+		for(ItemStack stack : itemStackArray)
+		{
+			if(!stack.isEmpty())
+			{
+				return false;
+			}
+		}
+		
+		return true;
 	}
 
 	@Override
@@ -193,10 +201,10 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	@Override
 	public boolean hasCustomName()
 	{
-		return tileEntityName != null && tileEntityName.length() > 0;
+		return tileEntityName != null && !tileEntityName.isEmpty();
 	}
 	
-	public void setCustoInventoryName(String customName)
+	public void setCustomInventoryName(String customName)
 	{
 		this.tileEntityName = customName;
 	}
