@@ -5,23 +5,36 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
+import net.minecraft.inventory.ItemStackHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.ITickable;
+import net.minecraft.util.NonNullList;
 
-public class TileEntityFusionFurnace extends TileEntityLockable implements IInventory, ISidedInventory
+public class TileEntityFusionFurnace extends TileEntityLockable implements IInventory, ISidedInventory, ITickable
 {
 	public enum slotEnum
 	{
 		INPUT_SLOT, OUTPUT_SLOT
 	}
 	
-	private ItemStack[] itemStackArray = new ItemStack[4];
+    private NonNullList<ItemStack> itemStackArray = NonNullList.<ItemStack>withSize(4, ItemStack.EMPTY);
 	
-	private int fuelFurnace;
+	private int fuelFusionFurnace;
+	
+	//process final Burn
+	private int processTotalBurn;
+	
+	//process return craft
+	private int timeProcess;
+	private int totalProcessTime;
+	
+	//process Burn
 	private int timeFusion;
-	private int speedFusion;
-	private int totalTime;
+	private int totalFusionTime;
+	
 	private String tileEntityName;
 	
 	private static final int[] slot_top = new int[]
@@ -38,7 +51,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	@Override
 	public int getSizeInventory()
 	{
-		return itemStackArray.length;
+		return itemStackArray.size();
 	}
 
 	@Override
@@ -50,62 +63,27 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	@Override
 	public ItemStack getStackInSlot(int index)
 	{
-		return itemStackArray[index];
+		return itemStackArray.get(index);
 	}
 
 	@Override
 	public ItemStack decrStackSize(int index, int count)
 	{
-		if(itemStackArray[index] != null)
-		{
-			ItemStack stack;
-			
-			if(itemStackArray[index].getMaxStackSize() <= count)
-			{
-				stack = itemStackArray[index];
-				itemStackArray[index] = null;
-				
-				return stack;
-			}
-			else
-			{
-				stack = itemStackArray[index].splitStack(count);
-				
-				if(itemStackArray[index].getMaxStackSize() == 0)
-				{
-					itemStackArray[index] = null;
-				}
-				
-				return stack;
-			}
-		}
-		else
-		{
-			return null;
-		}
+		return ItemStackHelper.getAndSplit(this.itemStackArray, index, count);
 	}
 
 	@Override
 	public ItemStack removeStackFromSlot(int index)
 	{
-		if(itemStackArray[index] != null) 
-		{
-			ItemStack stack = itemStackArray[index];
-			itemStackArray[index] = null;
-			
-			return stack;
-		}
-		else
-		{
-			return null;
-		}
+		return ItemStackHelper.getAndRemove(this.itemStackArray, index);
 	}
 
 	@Override
 	public void setInventorySlotContents(int index, ItemStack stack)
 	{
-		boolean isAlreadyInSlot = stack != null && stack.isItemEqual(itemStackArray[index]) && ItemStack.areItemStacksEqual(stack, itemStackArray[index]);
-		itemStackArray[index] = stack;
+		ItemStack itemstack = this.itemStackArray.get(index);
+		boolean isAlreadyInSlot = stack != null && stack.isItemEqual(itemstack) && ItemStack.areItemStackTagsEqual(stack, itemstack);
+		itemStackArray.set(index, stack);
 		
 		if(stack != null && stack.getMaxStackSize() > this.getInventoryStackLimit())
 		{
@@ -114,7 +92,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		
 		if(index == slotEnum.INPUT_SLOT.ordinal() && !isAlreadyInSlot)
 		{
-			totalTime = timeFusion;
+			totalFusionTime = timeFusion;
 			timeFusion = 0;
 			markDirty();
 		}
@@ -150,13 +128,17 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		switch(id)
 		{
 		case 0:
-			return fuelFurnace;
+			return fuelFusionFurnace;
 		case 1:
-			return speedFusion;
-		case 2:
 			return timeFusion;
+		case 2:
+			return totalFusionTime;
 		case 3:
-			return totalTime;
+			return timeProcess;
+		case 4:
+			return totalProcessTime;
+		case 5:
+			return processTotalBurn;
 			default:
 				return 0;
 		}
@@ -168,16 +150,22 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		switch(id)
 		{
 		case 0:
-			fuelFurnace = value;
+			fuelFusionFurnace = value;
 			break;
 		case 1:
-			speedFusion = value;
-			break;
-		case 2:
 			timeFusion = value;
 			break;
+		case 2:
+			totalFusionTime = value;
+			break;
 		case 3:
-			totalTime = value;
+			timeProcess = value;
+			break;
+		case 4:
+			totalProcessTime = value;
+			break;
+		case 5:
+			processTotalBurn = value;
 			break;
 			default:
 				break;
@@ -193,10 +181,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	@Override
 	public void clear()
 	{
-		for(int i = 0; i < itemStackArray.length; i++)
-		{
-			itemStackArray[i] = null;
-		}
+		this.itemStackArray.clear();
 	}
 
 	@Override
@@ -209,6 +194,52 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	public boolean hasCustomName()
 	{
 		return tileEntityName != null && tileEntityName.length() > 0;
+	}
+	
+	public void setCustoInventoryName(String customName)
+	{
+		this.tileEntityName = customName;
+	}
+	
+	@Override
+	public void readFromNBT(NBTTagCompound compound)
+	{
+		super.readFromNBT(compound);
+        this.itemStackArray = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
+        ItemStackHelper.loadAllItems(compound, this.itemStackArray);
+        
+        this.processTotalBurn = compound.getInteger("BurnTime");
+        this.timeFusion = compound.getInteger("FusionTime");
+        this.totalFusionTime = compound.getInteger("TotalFusionTime");
+        
+        this.timeProcess = compound.getInteger("Progress");
+        this.totalProcessTime = compound.getInteger("FinalProgress");
+        
+        if(compound.hasKey("CustomName", 8))
+        {
+        	this.tileEntityName = compound.getString("CustomName");
+        }
+	}
+	
+	@Override
+	public NBTTagCompound writeToNBT(NBTTagCompound compound)
+	{
+		super.writeToNBT(compound);
+		ItemStackHelper.saveAllItems(compound, this.itemStackArray);
+		
+		compound.setInteger("BurnTime", (short)processTotalBurn);
+		compound.setInteger("FusionTime", (short)timeFusion);
+		compound.setInteger("TotalFusionTime", (short)totalFusionTime);
+		
+		compound.setInteger("Progress", (short)timeProcess);
+		compound.setInteger("FinalProgress", (short)totalProcessTime);
+		
+		if(this.hasCustomName())
+		{
+			compound.setString("CustomName", tileEntityName);
+		}
+		
+		return compound;
 	}
 
 	@Override
@@ -239,6 +270,12 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	public boolean canExtractItem(int index, ItemStack stack, EnumFacing direction)
 	{
 		return true;
+	}
+
+	@Override
+	public void update()
+	{
+		
 	}
 	
 }
