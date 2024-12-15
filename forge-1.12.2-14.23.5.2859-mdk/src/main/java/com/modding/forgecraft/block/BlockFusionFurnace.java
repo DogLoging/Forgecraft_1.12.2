@@ -32,6 +32,11 @@ public class BlockFusionFurnace extends BlockContainer
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
 	}
 	
+	public static void setState(boolean fuel, World world, BlockPos pos)
+	{
+		
+	}
+	
 	@Override
 	public void onBlockAdded(World world, BlockPos pos, IBlockState state)
 	{

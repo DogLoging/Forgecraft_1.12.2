@@ -1,19 +1,31 @@
 package com.modding.forgecraft.tile;
 
+import com.modding.forgecraft.block.BlockFusionFurnace;
 import com.modding.forgecraft.inventory.ContainerFusionFurnace;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.init.Blocks;
+import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemBoat;
+import net.minecraft.item.ItemDoor;
+import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
+import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -302,10 +314,176 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	@Override
 	public void update()
 	{
-		if(isFuel())
+		boolean flag = this.isFuel();
+		boolean flag_1 = false;
+		
+		if(!world.isRemote)
 		{
+			ItemStack stack = this.itemStackArray.get(1); //combustivel
 			
+			if(this.isFuel() && !stack.isEmpty() && !((ItemStack)this.itemStackArray.get(0)).isEmpty())
+			{
+				if(!isFuel() && canFusion())
+				{
+					this.fuelFusionFurnace = getItemFuelTime(stack);
+					
+					if(isFuel())
+					{
+						flag_1 = true;
+						
+						if(!stack.isEmpty() && this.fuelFusionFurnace < 400)
+						{
+	                         Item item = stack.getItem();
+	                         stack.shrink(1);
+	                         
+	                         if(stack.isEmpty())
+	                         {
+	                        	 ItemStack item_1 = item.getContainerItem(stack);
+	                        	 this.itemStackArray.set(1, item_1);
+	                         }
+						}
+					}
+				}
+				
+				if(isFuel() && canFusion())
+				{
+					++timeFusion;
+					
+					if(this.timeFusion == this.totalFusionTime)
+					{
+						this.timeProcess += 1;
+						this.timeFusion = 0;
+						this.totalFusionTime = getFusionTime(this.itemStackArray.get(0));
+						fusionItem();
+						flag_1 = true;
+					}
+				}
+				else if(!isFuel() && timeFusion > 0)
+				{
+					timeFusion = MathHelper.clamp(timeFusion - 2, 0, totalFusionTime);
+				}
+				
+				if(flag != isFuel())
+				{
+					BlockFusionFurnace.setState(isFuel(), world, pos);
+				}
+			}
 		}
+		
+		if(flag_1)
+		{
+			this.markDirty();
+		}
+	}
+
+	private void fusionItem()
+	{
+		
+	}
+
+	private int getFusionTime(ItemStack itemStack)
+	{
+		return 200;
+	}
+
+	private int getItemFuelTime(ItemStack stack)
+	{
+		if(stack.isEmpty())
+		{
+			return 0;
+		}
+		else 
+		{
+			Item item = stack.getItem();
+			
+            if (item == Item.getItemFromBlock(Blocks.WOODEN_SLAB))
+            {
+                return 15;
+            }
+            else if (item == Item.getItemFromBlock(Blocks.WOOL))
+            {
+                return 10;
+            }
+            else if (item == Item.getItemFromBlock(Blocks.CARPET))
+            {
+                return 6;
+            }
+            else if (item == Item.getItemFromBlock(Blocks.LADDER))
+            {
+                return 30;
+            }
+            else if (item == Item.getItemFromBlock(Blocks.WOODEN_BUTTON))
+            {
+                return 10;
+            }
+            else if (Block.getBlockFromItem(item).getDefaultState().getMaterial() == Material.WOOD)
+            {
+                return 30;
+            }
+            else if (item == Item.getItemFromBlock(Blocks.COAL_BLOCK))
+            {
+                return 160;
+            }
+            else if (item instanceof ItemTool && "WOOD".equals(((ItemTool)item).getToolMaterialName()))
+            {
+                return 20;
+            }
+            else if (item instanceof ItemSword && "WOOD".equals(((ItemSword)item).getToolMaterialName()))
+            {
+                return 20;
+            }
+            else if (item instanceof ItemHoe && "WOOD".equals(((ItemHoe)item).getMaterialName()))
+            {
+                return 20;
+            }
+            else if (item == Items.STICK)
+            {
+                return 10;
+            }
+            else if (item != Items.BOW && item != Items.FISHING_ROD)
+            {
+                if (item == Items.SIGN)
+                {
+                    return 20;
+                }
+                else if (item == Items.COAL)
+                {
+                    return 160;
+                }
+                else if (item == Items.LAVA_BUCKET)
+                {
+                    return 200;
+                }
+                else if (item != Item.getItemFromBlock(Blocks.SAPLING) && item != Items.BOWL)
+                {
+                    if (item == Items.BLAZE_ROD)
+                    {
+                        return 240;
+                    }
+                    else if (item instanceof ItemDoor && item != Items.IRON_DOOR)
+                    {
+                        return 20;
+                    }
+                    else
+                    {
+                        return item instanceof ItemBoat ? 40 : 0;
+                    }
+                }
+                else
+                {
+                    return 10;
+                }
+            }
+            else
+            {
+                return 30;
+            }
+		}
+	}
+	
+	private boolean canFusion()
+	{
+		return false;
 	}
 	
 }
