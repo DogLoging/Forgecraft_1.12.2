@@ -1,6 +1,7 @@
 package com.modding.forgecraft.tile;
 
 import com.modding.forgecraft.block.BlockFusionFurnace;
+import com.modding.forgecraft.crafting.FusionRecipes;
 import com.modding.forgecraft.inventory.ContainerFusionFurnace;
 
 import net.minecraft.block.Block;
@@ -242,6 +243,8 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
         this.timeProcess = compound.getInteger("Progress");
         this.totalProcessTime = compound.getInteger("FinalProgress");
         
+        this.fuelFusionFurnace = getItemFuelTime(this.itemStackArray.get(slotEnum.INPUT_FUEL.ordinal()));
+        
         if(compound.hasKey("CustomName", 8))
         {
         	this.tileEntityName = compound.getString("CustomName");
@@ -402,6 +405,46 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	{
 		
 	}
+	
+	private boolean canFusion()
+	{
+		if(((ItemStack)this.itemStackArray.get(slotEnum.INPUT_SLOT1.ordinal())).isEmpty() && ((ItemStack)this.itemStackArray.get(slotEnum.INPUT_SLOT2.ordinal())).isEmpty())
+		{
+			return false;
+		}
+		else
+		{
+			ItemStack stack = FusionRecipes.instance().getFusionResult(this.itemStackArray.get(slotEnum.OUTPUT_SLOT.ordinal()));
+			
+			if(stack.isEmpty())
+			{
+				return false;
+			}
+			else
+			{
+				ItemStack result = this.itemStackArray.get(slotEnum.OUTPUT_SLOT.ordinal());
+				
+				if(result.isEmpty())
+				{
+					return true;
+				}
+				else if(!result.isItemEqual(stack))
+				{
+					return false;
+				}
+				else if(result.getCount() + stack.getCount() <= this.getInventoryStackLimit() && result.getCount() + stack.getCount() <= result.getMaxStackSize())
+				{
+					return true;
+				}
+				else
+				{
+					return result.getCount() + stack.getCount() <= result.getMaxStackSize();
+				}
+			}
+			
+			return true;
+		}
+	}
 
 	private int getFusionTime(ItemStack slot_1, ItemStack slot_2)
 	{
@@ -502,10 +545,4 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
             }
 		}
 	}
-	
-	private boolean canFusion()
-	{
-		return false;
-	}
-	
 }
