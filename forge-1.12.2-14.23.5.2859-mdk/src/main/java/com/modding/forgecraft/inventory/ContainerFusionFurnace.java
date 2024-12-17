@@ -5,8 +5,14 @@ import com.modding.forgecraft.tile.TileEntityFusionFurnace;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.crafting.FurnaceRecipes;
+import net.minecraft.tileentity.TileEntityFurnace;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ContainerFusionFurnace extends Container
 {
@@ -31,7 +37,7 @@ public class ContainerFusionFurnace extends Container
 		this.addSlotToContainer(new Slot(tileFusionFurnace, TileEntityFusionFurnace.slotEnum.INPUT_SLOT2.ordinal(), 84, 39));
 		
 		this.addSlotToContainer(new SlotFusionFurnaceOutPut(playerInventory.player, tileFusionFurnace, TileEntityFusionFurnace.slotEnum.OUTPUT_SLOT.ordinal(), 148, 39));
-		this.addSlotToContainer(new SlotFuelFusionFurnace(playerInventory.player, tileFusionFurnace, TileEntityFusionFurnace.slotEnum.INPUT_FUEL.ordinal(), 43, 70));
+		this.addSlotToContainer(new SlotFuelFusionFurnace(tileFusionFurnace, TileEntityFusionFurnace.slotEnum.INPUT_FUEL.ordinal(), 43, 70));
 		
 		int i;
 		
@@ -50,8 +56,138 @@ public class ContainerFusionFurnace extends Container
 	}
 	
 	@Override
+    public void addListener(IContainerListener listener)
+    {
+        super.addListener(listener);
+        listener.sendAllWindowProperties(this, this.tileFusionFurnace);
+    }
+	
+	@Override
+	public void detectAndSendChanges()
+	{
+		super.detectAndSendChanges();
+		
+		for(int i = 0; i < this.listeners.size(); ++i)
+		{
+			IContainerListener icontainerListener = this.listeners.get(i);
+			
+			if(this.totalTimeFusion != this.tileFusionFurnace.getField(2))
+			{
+				icontainerListener.sendWindowProperty(this, 2, this.tileFusionFurnace.getField(2));
+			}
+			else if(this.timeFusion != this.tileFusionFurnace.getField(1))
+			{
+				icontainerListener.sendWindowProperty(this, 1, this.tileFusionFurnace.getField(1));
+			}
+			else if(this.totalProcessTime != this.tileFusionFurnace.getField(0))
+			{
+				icontainerListener.sendWindowProperty(this, 0, this.tileFusionFurnace.getField(0));
+			}
+			else if(this.timeProcess != this.tileFusionFurnace.getField(3))
+			{
+				icontainerListener.sendWindowProperty(this, 3, this.tileFusionFurnace.getField(3));
+			}
+			else if(this.processTotalBurn != this.tileFusionFurnace.getField(4))
+			{
+				icontainerListener.sendWindowProperty(this, 4, this.tileFusionFurnace.getField(4));
+			}
+			else if(this.fuelFusionFurnace != this.tileFusionFurnace.getField(5))
+			{
+				icontainerListener.sendWindowProperty(this, 5, this.tileFusionFurnace.getField(5));
+			}
+		}
+		
+		this.timeFusion = this.tileFusionFurnace.getField(2);
+		this.totalTimeFusion = this.tileFusionFurnace.getField(1);
+		this.totalProcessTime = this.tileFusionFurnace.getField(0);
+		this.timeProcess = this.tileFusionFurnace.getField(3);
+		this.processTotalBurn = this.tileFusionFurnace.getField(4);
+		this.fuelFusionFurnace = this.tileFusionFurnace.getField(5);
+	}
+	
+	@Override
+    @SideOnly(Side.CLIENT)
+    public void updateProgressBar(int id, int data)
+    {
+        this.tileFusionFurnace.setField(id, data);
+    }
+    
+	@Override
 	public boolean canInteractWith(EntityPlayer player)
 	{
 		return tileFusionFurnace.isUsableByPlayer(player);
 	}
+	
+	@Override
+    public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
+    {
+        ItemStack itemstack = ItemStack.EMPTY;
+        Slot slot = this.inventorySlots.get(index);
+
+        if (slot != null && slot.getHasStack())
+        {
+            ItemStack itemstack1 = slot.getStack();
+            itemstack = itemstack1.copy();
+
+            if (index == 2)
+            {
+                if (!this.mergeItemStack(itemstack1, 3, 39, true))
+                {
+                    return ItemStack.EMPTY;
+                }
+
+                slot.onSlotChange(itemstack1, itemstack);
+            }
+            else if (index != 1 && index != 0)
+            {
+                if (!FurnaceRecipes.instance().getSmeltingResult(itemstack1).isEmpty())
+                {
+                    if (!this.mergeItemStack(itemstack1, 0, 1, false))
+                    {
+                        return ItemStack.EMPTY;
+                    }
+                }
+                else if (TileEntityFurnace.isItemFuel(itemstack1))
+                {
+                    if (!this.mergeItemStack(itemstack1, 1, 2, false))
+                    {
+                        return ItemStack.EMPTY;
+                    }
+                }
+                else if (index >= 3 && index < 30)
+                {
+                    if (!this.mergeItemStack(itemstack1, 30, 39, false))
+                    {
+                        return ItemStack.EMPTY;
+                    }
+                }
+                else if (index >= 30 && index < 39 && !this.mergeItemStack(itemstack1, 3, 30, false))
+                {
+                    return ItemStack.EMPTY;
+                }
+            }
+            else if (!this.mergeItemStack(itemstack1, 3, 39, false))
+            {
+                return ItemStack.EMPTY;
+            }
+
+            if (itemstack1.isEmpty())
+            {
+                slot.putStack(ItemStack.EMPTY);
+            }
+            else
+            {
+                slot.onSlotChanged();
+            }
+
+            if (itemstack1.getCount() == itemstack.getCount())
+            {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTake(playerIn, itemstack1);
+        }
+
+        return itemstack;
+    }
 }
