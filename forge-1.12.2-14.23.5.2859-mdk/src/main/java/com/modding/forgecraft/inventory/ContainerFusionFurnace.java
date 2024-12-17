@@ -31,7 +31,8 @@ public class ContainerFusionFurnace extends Container
 		this.addSlotToContainer(new Slot(tileFusionFurnace, TileEntityFusionFurnace.slotEnum.INPUT_SLOT2.ordinal(), 84, 39));
 		
 		this.addSlotToContainer(new SlotFusionFurnaceOutPut(playerInventory.player, tileFusionFurnace, TileEntityFusionFurnace.slotEnum.OUTPUT_SLOT.ordinal(), 148, 39));
-	
+		this.addSlotToContainer(new SlotFuelFusionFurnace(playerInventory.player, tileFusionFurnace, TileEntityFusionFurnace.slotEnum.INPUT_FUEL.ordinal(), 43, 70));
+		
 		int i;
 		
 		for(i = 0; i < 3; ++i)

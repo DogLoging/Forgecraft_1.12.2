@@ -29,7 +29,6 @@ public class FusionRecipes
 		addFusionRecipe(new ItemStack(Items.IRON_INGOT), new ItemStack(Items.COAL), new ItemStack(ModItems.steel_ingot), 10.0F);
 		addFusionRecipe(new ItemStack(ModItems.copper_ingot), new ItemStack(Items.DIAMOND), new ItemStack(ModItems.titanium_ingot), 25.0F);
 		addFusionRecipe(new ItemStack(ModItems.steel_ingot), new ItemStack(Blocks.OBSIDIAN), new ItemStack(ModItems.adamantium_ingot), 25.0F);
-
 	}
 	
 	public void addFusionRecipe(ItemStack slot_1, ItemStack slot_2, ItemStack result, float exp)
@@ -64,7 +63,7 @@ public class FusionRecipes
 		return input.getItem() == reult.getItem() && input.getMetadata() == 32767 && input.getMetadata() == reult.getMetadata();
 	}
 	
-    public float getSmeltingExperience(ItemStack stack)
+    public float getFusionExperience(ItemStack stack)
     {
         for (Entry<ItemStack, Float> entry : this.experienceList.entrySet())
         {
