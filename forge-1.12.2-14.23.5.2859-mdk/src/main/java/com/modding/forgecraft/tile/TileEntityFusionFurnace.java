@@ -414,7 +414,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		}
 		else
 		{
-			ItemStack stack = FusionRecipes.instance().getFusionResult(this.itemStackArray.get(slotEnum.OUTPUT_SLOT.ordinal()));
+			ItemStack stack = FusionRecipes.instance().getFusionResult(this.itemStackArray.get(slotEnum.INPUT_SLOT1.ordinal()), this.itemStackArray.get(slotEnum.INPUT_SLOT2.ordinal()));
 			
 			if(stack.isEmpty())
 			{
@@ -441,8 +441,6 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 					return result.getCount() + stack.getCount() <= result.getMaxStackSize();
 				}
 			}
-			
-			return true;
 		}
 	}
 
