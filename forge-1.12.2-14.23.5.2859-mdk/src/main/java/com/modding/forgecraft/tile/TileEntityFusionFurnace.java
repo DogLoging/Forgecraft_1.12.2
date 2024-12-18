@@ -1,5 +1,6 @@
 package com.modding.forgecraft.tile;
 
+import com.modding.forgecraft.Main;
 import com.modding.forgecraft.block.BlockFusionFurnace;
 import com.modding.forgecraft.crafting.FusionRecipes;
 import com.modding.forgecraft.inventory.ContainerFusionFurnace;
@@ -21,11 +22,13 @@ import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
+import net.minecraft.item.crafting.FurnaceRecipes;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -122,6 +125,12 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		{
 			totalFusionTime = timeFusion;
 			timeFusion = 0;
+			
+			totalProcessTime = timeProcess;
+			timeProcess = 0;
+			
+			processTotalBurn = 0;
+			
 			markDirty();
 		}
 	}
@@ -203,7 +212,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	@Override
 	public int getFieldCount()
 	{
-		return 4;
+		return 6;
 	}
 
 	@Override
@@ -236,14 +245,14 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
         this.itemStackArray = NonNullList.<ItemStack>withSize(this.getSizeInventory(), ItemStack.EMPTY);
         ItemStackHelper.loadAllItems(compound, this.itemStackArray);
         
-        this.processTotalBurn = compound.getInteger("BurnTime");
-        this.timeFusion = compound.getInteger("FusionTime");
-        this.totalFusionTime = compound.getInteger("TotalFusionTime");
+        this.processTotalBurn = compound.getShort("BurnTime");
+        this.timeFusion = compound.getShort("FusionTime");
+        this.totalFusionTime = compound.getShort("TotalFusionTime");
         
-        this.timeProcess = compound.getInteger("Progress");
-        this.totalProcessTime = compound.getInteger("FinalProgress");
+        this.timeProcess = compound.getShort("Progress");
+        this.totalProcessTime = compound.getShort("FinalProgress");
         
-        this.fuelFusionFurnace = getItemFuelTime(this.itemStackArray.get(slotEnum.INPUT_FUEL.ordinal()));
+        this.fuelFusionFurnace = getItemFuel(this.itemStackArray.get(slotEnum.INPUT_FUEL.ordinal()));
         
         if(compound.hasKey("CustomName", 8))
         {
@@ -257,12 +266,12 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		super.writeToNBT(compound);
 		ItemStackHelper.saveAllItems(compound, this.itemStackArray);
 		
-		compound.setInteger("BurnTime", (short)processTotalBurn);
-		compound.setInteger("FusionTime", (short)timeFusion);
-		compound.setInteger("TotalFusionTime", (short)totalFusionTime);
+		compound.setShort("BurnTime", (short)processTotalBurn);
+		compound.setShort("FusionTime", (short)timeFusion);
+		compound.setShort("TotalFusionTime", (short)totalFusionTime);
 		
-		compound.setInteger("Progress", (short)timeProcess);
-		compound.setInteger("FinalProgress", (short)totalProcessTime);
+		compound.setShort("Progress", (short)timeProcess);
+		compound.setShort("FinalProgress", (short)totalProcessTime);
 		
 		if(this.hasCustomName())
 		{
@@ -281,7 +290,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	@Override
 	public String getGuiID()
 	{
-		return "forgecraft:fusion_furnace_gui";
+		return Main.MODID + ":fusion_furnace_gui";
 	}
 
 	@Override
@@ -327,12 +336,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 			{
 				if(!isFuel() && canFusion())
 				{
-					this.fuelFusionFurnace = getItemFuelTime(stack);
-					
-					if(fuelFusionFurnace > 400)
-					{
-						fuelFusionFurnace = 400;
-					}
+					this.fuelFusionFurnace = getItemFuel(stack);
 					
 					if(isFuel())
 					{
@@ -358,17 +362,12 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 					
 					if(this.timeFusion == this.totalFusionTime)
 					{
-						int count = 0;
-						
 						this.processTotalBurn += 1;
 						this.timeFusion = 0;
 						this.totalFusionTime = getFusionTime(this.itemStackArray.get(slotEnum.INPUT_SLOT1.ordinal()), this.itemStackArray.get(slotEnum.INPUT_SLOT2.ordinal()));
 						
-						flag_1 = true;
-						
 						if(processTotalBurn >= 10)
 						{
-							count += 1;
 							timeProcess += 1;
 							processTotalBurn = 0;
 							
@@ -377,22 +376,28 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 								timeProcess = 0;
 								totalProcessTime = getFusionTime(this.itemStackArray.get(slotEnum.INPUT_SLOT1.ordinal()), this.itemStackArray.get(slotEnum.INPUT_SLOT2.ordinal()));
 								fusionItem();
-							}
-							
-							if(count >= 20)
-							{
-								count = 0;
-								fuelFusionFurnace -= 1;
+								
+								flag_1 = true;
 							}
 						}
 					}
 				}
-				
-				if(flag != isFuel())
+				else
 				{
-					BlockFusionFurnace.setState(isFuel(), world, pos);
+					timeFusion = 0;
+					processTotalBurn = 0;
+					timeProcess = 0;
 				}
 			}
+			else if(!isFuel() && this.timeFusion > 0)
+			{
+				this.timeFusion = MathHelper.clamp(this.timeFusion - 2, 0, this.totalFusionTime);
+			}
+			
+            if (flag != this.isFuel())
+            {
+                flag_1 = true;
+            }
 		}
 		
 		if(flag_1)
@@ -403,7 +408,26 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 
 	private void fusionItem()
 	{
-		
+        if (this.canFusion())
+        {
+            ItemStack input1 = this.itemStackArray.get(slotEnum.INPUT_SLOT1.ordinal());
+            ItemStack input2 = this.itemStackArray.get(slotEnum.INPUT_SLOT2.ordinal());
+            ItemStack result = FusionRecipes.instance().getFusionResult(input1, input2);
+
+            ItemStack output = this.itemStackArray.get(slotEnum.OUTPUT_SLOT.ordinal());
+
+            if (output.isEmpty())
+            {
+                this.itemStackArray.set(slotEnum.OUTPUT_SLOT.ordinal(), result.copy());
+            }
+            else if (output.isItemEqual(result))
+            {
+                output.grow(result.getCount());
+            }
+
+            input1.shrink(1);
+            input2.shrink(1);
+        }
 	}
 	
 	private boolean canFusion()
@@ -443,13 +467,18 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 			}
 		}
 	}
-
+	
 	private int getFusionTime(ItemStack slot_1, ItemStack slot_2)
 	{
 		return 200;
 	}
+	
+	public static boolean isItemFuel(ItemStack stack)
+	{
+		return getItemFuel(stack) > 0;
+	}
 
-	private int getItemFuelTime(ItemStack stack)
+	private static int getItemFuel(ItemStack stack)
 	{
 		if(stack.isEmpty())
 		{

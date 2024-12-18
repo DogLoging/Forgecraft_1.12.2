@@ -1,5 +1,6 @@
 package com.modding.forgecraft.inventory;
 
+import com.modding.forgecraft.crafting.FusionRecipes;
 import com.modding.forgecraft.tile.TileEntityFusionFurnace;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -19,7 +20,6 @@ public class ContainerFusionFurnace extends Container
 	private final IInventory tileFusionFurnace;
 	private final int sizeInventory;
 	
-	private int fuelFusionFurnace;
 	private int processTotalBurn;
 	
 	private int timeFusion;
@@ -33,11 +33,11 @@ public class ContainerFusionFurnace extends Container
 		tileFusionFurnace = inventory;
 		sizeInventory = tileFusionFurnace.getSizeInventory();
 		
-		this.addSlotToContainer(new Slot(tileFusionFurnace, TileEntityFusionFurnace.slotEnum.INPUT_SLOT1.ordinal(), 43, 39));
-		this.addSlotToContainer(new Slot(tileFusionFurnace, TileEntityFusionFurnace.slotEnum.INPUT_SLOT2.ordinal(), 84, 39));
+		this.addSlotToContainer(new Slot(tileFusionFurnace, TileEntityFusionFurnace.slotEnum.INPUT_SLOT1.ordinal(), 26, 22));
+		this.addSlotToContainer(new Slot(tileFusionFurnace, TileEntityFusionFurnace.slotEnum.INPUT_SLOT2.ordinal(), 67, 22));
 		
-		this.addSlotToContainer(new SlotFusionFurnaceOutPut(playerInventory.player, tileFusionFurnace, TileEntityFusionFurnace.slotEnum.OUTPUT_SLOT.ordinal(), 148, 39));
-		this.addSlotToContainer(new SlotFuelFusionFurnace(tileFusionFurnace, TileEntityFusionFurnace.slotEnum.INPUT_FUEL.ordinal(), 43, 70));
+		this.addSlotToContainer(new SlotFusionFurnaceOutPut(playerInventory.player, tileFusionFurnace, TileEntityFusionFurnace.slotEnum.OUTPUT_SLOT.ordinal(), 127, 22));
+		this.addSlotToContainer(new SlotFuelFusionFurnace(tileFusionFurnace, TileEntityFusionFurnace.slotEnum.INPUT_FUEL.ordinal(), 26, 53));
 		
 		int i;
 		
@@ -75,13 +75,13 @@ public class ContainerFusionFurnace extends Container
 			{
 				icontainerListener.sendWindowProperty(this, 2, this.tileFusionFurnace.getField(2));
 			}
-			else if(this.timeFusion != this.tileFusionFurnace.getField(1))
-			{
-				icontainerListener.sendWindowProperty(this, 1, this.tileFusionFurnace.getField(1));
-			}
-			else if(this.totalProcessTime != this.tileFusionFurnace.getField(0))
+			else if(this.timeFusion != this.tileFusionFurnace.getField(0))
 			{
 				icontainerListener.sendWindowProperty(this, 0, this.tileFusionFurnace.getField(0));
+			}
+			else if(this.totalProcessTime != this.tileFusionFurnace.getField(1))
+			{
+				icontainerListener.sendWindowProperty(this, 1, this.tileFusionFurnace.getField(1));
 			}
 			else if(this.timeProcess != this.tileFusionFurnace.getField(3))
 			{
@@ -91,10 +91,6 @@ public class ContainerFusionFurnace extends Container
 			{
 				icontainerListener.sendWindowProperty(this, 4, this.tileFusionFurnace.getField(4));
 			}
-			else if(this.fuelFusionFurnace != this.tileFusionFurnace.getField(5))
-			{
-				icontainerListener.sendWindowProperty(this, 5, this.tileFusionFurnace.getField(5));
-			}
 		}
 		
 		this.timeFusion = this.tileFusionFurnace.getField(2);
@@ -102,7 +98,6 @@ public class ContainerFusionFurnace extends Container
 		this.totalProcessTime = this.tileFusionFurnace.getField(0);
 		this.timeProcess = this.tileFusionFurnace.getField(3);
 		this.processTotalBurn = this.tileFusionFurnace.getField(4);
-		this.fuelFusionFurnace = this.tileFusionFurnace.getField(5);
 	}
 	
 	@Override
@@ -129,7 +124,7 @@ public class ContainerFusionFurnace extends Container
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (index == 2)
+            if (index == TileEntityFusionFurnace.slotEnum.OUTPUT_SLOT.ordinal())
             {
                 if (!this.mergeItemStack(itemstack1, 3, 39, true))
                 {
@@ -138,16 +133,16 @@ public class ContainerFusionFurnace extends Container
 
                 slot.onSlotChange(itemstack1, itemstack);
             }
-            else if (index != 1 && index != 0)
+            else if (index != TileEntityFusionFurnace.slotEnum.INPUT_SLOT1.ordinal() && index != TileEntityFusionFurnace.slotEnum.INPUT_SLOT2.ordinal() && index != TileEntityFusionFurnace.slotEnum.INPUT_FUEL.ordinal())
             {
-                if (!FurnaceRecipes.instance().getSmeltingResult(itemstack1).isEmpty())
+                if (!FusionRecipes.instance().getFusionResult(itemstack1, slot.getStack()).isEmpty())
                 {
                     if (!this.mergeItemStack(itemstack1, 0, 1, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (TileEntityFurnace.isItemFuel(itemstack1))
+                else if (TileEntityFusionFurnace.isItemFuel(itemstack1))
                 {
                     if (!this.mergeItemStack(itemstack1, 1, 2, false))
                     {

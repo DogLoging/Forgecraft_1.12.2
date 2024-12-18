@@ -12,6 +12,7 @@ import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.inventory.InventoryHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
@@ -25,16 +26,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class BlockFusionFurnace extends BlockContainer
 {	
 	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
+	public static boolean keepInventory;
 	
 	public BlockFusionFurnace()
 	{
 		super(Material.IRON);
 		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
-	}
-	
-	public static void setState(boolean fuel, World world, BlockPos pos)
-	{
-		
 	}
 	
 	@Override
@@ -73,12 +70,12 @@ public class BlockFusionFurnace extends BlockContainer
 	@Override
 	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
 	{
-	   if(!world.isRemote)
-	   {
-		   player.openGui(Main.instance, 0, world, pos.getX(), pos.getY(), pos.getZ());
-	   }
-	    	
-	   return true;
+        if (!world.isRemote)
+        {
+            player.openGui(Main.instance, Main.GUI_ENUM.FUSION.ordinal(), world, pos.getX(), pos.getY(), pos.getZ()); 
+        }
+        
+        return true;
 	}
 	
 	@Override
@@ -102,6 +99,17 @@ public class BlockFusionFurnace extends BlockContainer
     @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state)
     {
+        if (!keepInventory)
+        {
+            TileEntity tileentity = world.getTileEntity(pos);
+
+            if (tileentity instanceof TileEntityFusionFurnace)
+            {
+                InventoryHelper.dropInventoryItems(world, pos, (TileEntityFusionFurnace)tileentity);
+                world.updateComparatorOutputLevel(pos, this);
+            }
+        }
+
         super.breakBlock(world, pos, state);
     }
     

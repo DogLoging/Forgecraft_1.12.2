@@ -1,9 +1,9 @@
 package com.modding.forgecraft;
 
 import com.modding.forgecraft.init.ModBlocks;
+import com.modding.forgecraft.network.GuiHandler;
 import com.modding.forgecraft.proxy.CommonProxy;
 import com.modding.forgecraft.register.ModRegistryEvent;
-import com.modding.forgecraft.tile.RegistryTileEntity;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -12,6 +12,7 @@ import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 
 @Mod(modid = Main.MODID, version = Main.VERSION, name = Main.NAME)
 public class Main
@@ -38,7 +39,7 @@ public class Main
 	@EventHandler
 	public static void init(FMLInitializationEvent event)
 	{
-		RegistryTileEntity.initialization();
+		NetworkRegistry.INSTANCE.registerGuiHandler(Main.instance, new GuiHandler());
 		
 		proxy.init();
 	}
@@ -47,5 +48,10 @@ public class Main
 	public static void postInit(FMLPostInitializationEvent event)
 	{
 		proxy.postInit();
+	}
+	
+	public enum GUI_ENUM
+	{
+		FUSION
 	}
 }
