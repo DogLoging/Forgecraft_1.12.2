@@ -1,4 +1,4 @@
-package com.modding.forgecraft.network;
+package com.modding.forgecraft.inventory;
 
 import java.util.Map;
 
@@ -6,8 +6,7 @@ import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
 import com.modding.forgecraft.Main;
-import com.modding.forgecraft.inventory.ContainerFusionFurnace;
-import com.modding.forgecraft.inventory.GuiFusionFurnace;
+import com.modding.forgecraft.block.container.ContainerFusionFurnace;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.IInventory;

@@ -1,4 +1,4 @@
-package com.modding.forgecraft.inventory;
+package com.modding.forgecraft.inventory.slot;
 
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;

@@ -1,4 +1,4 @@
-package com.modding.forgecraft.tile;
+package com.modding.forgecraft.block.tileentity;
 
 import com.modding.forgecraft.Main;
 
@@ -9,6 +9,6 @@ public class RegistryTileEntity
 	@SuppressWarnings("deprecation")
 	public static void initialization()
 	{
-		GameRegistry.registerTileEntity(TileEntityFusionFurnace.class, Main.MODID + "fusion_furnace");
+		GameRegistry.registerTileEntity(TileEntityFusionFurnace.class, Main.MODID + ":fusion_furnace");
 	}
 }

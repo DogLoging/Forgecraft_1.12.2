@@ -1,7 +1,9 @@
-package com.modding.forgecraft.inventory;
+package com.modding.forgecraft.block.container;
 
+import com.modding.forgecraft.block.tileentity.TileEntityFusionFurnace;
 import com.modding.forgecraft.crafting.FusionRecipes;
-import com.modding.forgecraft.tile.TileEntityFusionFurnace;
+import com.modding.forgecraft.inventory.slot.SlotFuelFusionFurnace;
+import com.modding.forgecraft.inventory.slot.SlotFusionFurnaceOutPut;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -10,15 +12,12 @@ import net.minecraft.inventory.IContainerListener;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.FurnaceRecipes;
-import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ContainerFusionFurnace extends Container
 {
 	private final IInventory tileFusionFurnace;
-	private final int sizeInventory;
 	
 	private int processTotalBurn;
 	
@@ -31,13 +30,12 @@ public class ContainerFusionFurnace extends Container
 	public ContainerFusionFurnace(InventoryPlayer playerInventory, IInventory inventory)
 	{
 		tileFusionFurnace = inventory;
-		sizeInventory = tileFusionFurnace.getSizeInventory();
 		
-		this.addSlotToContainer(new Slot(tileFusionFurnace, TileEntityFusionFurnace.slotEnum.INPUT_SLOT1.ordinal(), 26, 22));
-		this.addSlotToContainer(new Slot(tileFusionFurnace, TileEntityFusionFurnace.slotEnum.INPUT_SLOT2.ordinal(), 67, 22));
+		this.addSlotToContainer(new Slot(tileFusionFurnace, 0, 26, 22));
+		this.addSlotToContainer(new Slot(tileFusionFurnace, 1, 67, 22));
 		
-		this.addSlotToContainer(new SlotFusionFurnaceOutPut(playerInventory.player, tileFusionFurnace, TileEntityFusionFurnace.slotEnum.OUTPUT_SLOT.ordinal(), 127, 22));
-		this.addSlotToContainer(new SlotFuelFusionFurnace(tileFusionFurnace, TileEntityFusionFurnace.slotEnum.INPUT_FUEL.ordinal(), 26, 53));
+		this.addSlotToContainer(new SlotFuelFusionFurnace(tileFusionFurnace, 2, 26, 53));
+		this.addSlotToContainer(new SlotFusionFurnaceOutPut(playerInventory.player, tileFusionFurnace, 3, 127, 22));
 		
 		int i;
 		
@@ -93,9 +91,9 @@ public class ContainerFusionFurnace extends Container
 			}
 		}
 		
-		this.timeFusion = this.tileFusionFurnace.getField(2);
-		this.totalTimeFusion = this.tileFusionFurnace.getField(1);
-		this.totalProcessTime = this.tileFusionFurnace.getField(0);
+		this.timeFusion = this.tileFusionFurnace.getField(0);
+		this.totalTimeFusion = this.tileFusionFurnace.getField(2);
+		this.totalProcessTime = this.tileFusionFurnace.getField(1);
 		this.timeProcess = this.tileFusionFurnace.getField(3);
 		this.processTotalBurn = this.tileFusionFurnace.getField(4);
 	}
@@ -124,7 +122,7 @@ public class ContainerFusionFurnace extends Container
             ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
 
-            if (index == TileEntityFusionFurnace.slotEnum.OUTPUT_SLOT.ordinal())
+            if (index == 3)
             {
                 if (!this.mergeItemStack(itemstack1, 3, 39, true))
                 {
@@ -133,35 +131,44 @@ public class ContainerFusionFurnace extends Container
 
                 slot.onSlotChange(itemstack1, itemstack);
             }
-            else if (index != TileEntityFusionFurnace.slotEnum.INPUT_SLOT1.ordinal() && index != TileEntityFusionFurnace.slotEnum.INPUT_SLOT2.ordinal() && index != TileEntityFusionFurnace.slotEnum.INPUT_FUEL.ordinal())
+            else if (index != 0 && index != 1 && index != 2)
             {
-                if (!FusionRecipes.instance().getFusionResult(itemstack1, slot.getStack()).isEmpty())
+            	Slot slot1 = (Slot)this.inventorySlots.get(index + 1);
+            	
+                if (!FusionRecipes.instance().getFusionResult(itemstack1, slot1.getStack()).isEmpty())
                 {
-                    if (!this.mergeItemStack(itemstack1, 0, 1, false))
+                    if (!this.mergeItemStack(itemstack1, 0, 2, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
                 else if (TileEntityFusionFurnace.isItemFuel(itemstack1))
                 {
-                    if (!this.mergeItemStack(itemstack1, 1, 2, false))
+                    if (!this.mergeItemStack(itemstack1, 2, 3, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (index >= 3 && index < 30)
+                else if (TileEntityFusionFurnace.isItemFuel(itemstack1))
                 {
-                    if (!this.mergeItemStack(itemstack1, 30, 39, false))
+                    if (!this.mergeItemStack(itemstack1, 2, 3, false))
                     {
                         return ItemStack.EMPTY;
                     }
                 }
-                else if (index >= 30 && index < 39 && !this.mergeItemStack(itemstack1, 3, 30, false))
+                else if (index >= 4 && index < 31)
+                {
+                    if (!this.mergeItemStack(itemstack1, 31, 40, false))
+                    {
+                        return ItemStack.EMPTY;
+                    }
+                }
+                else if (index >= 31 && index < 40 && !this.mergeItemStack(itemstack1, 4, 31, false))
                 {
                     return ItemStack.EMPTY;
                 }
             }
-            else if (!this.mergeItemStack(itemstack1, 3, 39, false))
+            else if (!this.mergeItemStack(itemstack1, 4, 40, false))
             {
                 return ItemStack.EMPTY;
             }

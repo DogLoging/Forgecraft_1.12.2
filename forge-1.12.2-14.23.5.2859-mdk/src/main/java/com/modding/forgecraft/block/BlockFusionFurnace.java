@@ -1,37 +1,69 @@
 package com.modding.forgecraft.block;
 
+import java.util.Random;
+
 import com.modding.forgecraft.Main;
+import com.modding.forgecraft.block.tileentity.TileEntityFusionFurnace;
 import com.modding.forgecraft.init.ModBlocks;
-import com.modding.forgecraft.tile.TileEntityFusionFurnace;
 
 import net.minecraft.block.BlockContainer;
+import net.minecraft.block.BlockHorizontal;
+import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
+import net.minecraft.block.properties.PropertyBool;
 import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.BlockStateContainer;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.InventoryHelper;
+import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumBlockRenderType;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
-public class BlockFusionFurnace extends BlockContainer
+public class BlockFusionFurnace extends BlockContainer implements ITileEntityProvider
 {	
-	public static final PropertyDirection FACING = PropertyDirection.create("facing", EnumFacing.Plane.HORIZONTAL);
-	public static boolean keepInventory;
+	public static final PropertyDirection FACING = BlockHorizontal.FACING;
+	public static final PropertyBool PROCESS = PropertyBool.create("process");
 	
 	public BlockFusionFurnace()
 	{
 		super(Material.IRON);
-		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH));
+		this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(PROCESS, false));
+	}
+	
+    @Override
+    public Item getItemDropped(IBlockState state, Random rand, int fortune)
+    {
+    	return Item.getItemFromBlock(ModBlocks.fusion_furnace);
+    }
+    
+    @Override
+    @SideOnly(Side.CLIENT)
+    public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
+    {
+        return new ItemStack(ModBlocks.fusion_furnace);
+    }
+    
+	@Override
+	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	{
+        if (!world.isRemote)
+        {
+            player.openGui(Main.instance, Main.GUI_ENUM.FUSION.ordinal(), world, pos.getX(), pos.getY(), pos.getZ()); 
+        }
+        
+        return true;
 	}
 	
 	@Override
@@ -67,15 +99,25 @@ public class BlockFusionFurnace extends BlockContainer
 		}
 	}
 	
-	@Override
-	public boolean onBlockActivated(World world, BlockPos pos, IBlockState state, EntityPlayer player, EnumHand hand, EnumFacing facing, float hitX, float hitY, float hitZ)
+	public static void setState(boolean active, World world, BlockPos pos)
 	{
-        if (!world.isRemote)
-        {
-            player.openGui(Main.instance, Main.GUI_ENUM.FUSION.ordinal(), world, pos.getX(), pos.getY(), pos.getZ()); 
-        }
-        
-        return true;
+		IBlockState state = world.getBlockState(pos);
+		TileEntity tileEntity = world.getTileEntity(pos);
+		
+		if(active)
+		{
+            world.setBlockState(pos, ModBlocks.fusion_furnace.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(PROCESS, true), 3);
+		}
+		else
+		{
+            world.setBlockState(pos, ModBlocks.fusion_furnace.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(PROCESS, false), 3);
+		}
+		
+		if(tileEntity != null)
+		{
+			tileEntity.validate();
+			world.setTileEntity(pos, tileEntity);
+		}
 	}
 	
 	@Override
@@ -97,35 +139,44 @@ public class BlockFusionFurnace extends BlockContainer
     }
     
     @Override
+    public EnumBlockRenderType getRenderType(IBlockState state)
+    {
+    	return EnumBlockRenderType.MODEL;
+    }
+    
+    @Override
     public void breakBlock(World world, BlockPos pos, IBlockState state)
     {
-        if (!keepInventory)
-        {
-            TileEntity tileentity = world.getTileEntity(pos);
+        TileEntity tileentity = world.getTileEntity(pos);
 
-            if (tileentity instanceof TileEntityFusionFurnace)
-            {
-                InventoryHelper.dropInventoryItems(world, pos, (TileEntityFusionFurnace)tileentity);
-                world.updateComparatorOutputLevel(pos, this);
-            }
+        if (tileentity instanceof TileEntityFusionFurnace)
+        {
+            InventoryHelper.dropInventoryItems(world, pos, (TileEntityFusionFurnace)tileentity);
+            world.updateComparatorOutputLevel(pos, this);
         }
 
         super.breakBlock(world, pos, state);
     }
     
     @Override
-    @SideOnly(Side.CLIENT)
-    public ItemStack getItem(World worldIn, BlockPos pos, IBlockState state)
+    public IBlockState withRotation(IBlockState state, Rotation rot)
     {
-        return new ItemStack(ModBlocks.fusion_furnace);
+    	return state.withProperty(FACING, rot.rotate((EnumFacing)state.getValue(FACING)));
     }
     
     @Override
-    public EnumBlockRenderType getRenderType(IBlockState state)
+    public IBlockState withMirror(IBlockState state, Mirror mir)
     {
-    	return EnumBlockRenderType.MODEL;
+    	return state.withRotation(mir.toRotation((EnumFacing)state.getValue(FACING)));
     }
     
+    @Override
+    protected BlockStateContainer createBlockState()
+    {
+        return new BlockStateContainer(this, new IProperty[] {FACING, PROCESS});
+    }
+    
+    @Override
     public IBlockState getStateFromMeta(int meta)
     {
         EnumFacing enumfacing = EnumFacing.getFront(meta);
@@ -142,56 +193,5 @@ public class BlockFusionFurnace extends BlockContainer
     public int getMetaFromState(IBlockState state)
     {
         return ((EnumFacing)state.getValue(FACING)).getIndex();
-    }
-    
-    @Override
-    protected BlockStateContainer createBlockState()
-    {
-        return new BlockStateContainer(this, new IProperty[] {FACING});
-    }
-    
-    @SideOnly(Side.CLIENT)
-    static final class SwitchEnumFacing
-    {
-        static final int[] enumFacingArray = new int[EnumFacing.values().length];
-
-        static
-        {
-            try
-            {
-                enumFacingArray[EnumFacing.WEST.ordinal()] = 1;
-            }
-            catch (NoSuchFieldError var4)
-            {
-                ;
-            }
-
-            try
-            {
-                enumFacingArray[EnumFacing.EAST.ordinal()] = 2;
-            }
-            catch (NoSuchFieldError var3)
-            {
-                ;
-            }
-
-            try
-            {
-                enumFacingArray[EnumFacing.NORTH.ordinal()] = 3;
-            }
-            catch (NoSuchFieldError var2)
-            {
-                ;
-            }
-
-            try
-            {
-                enumFacingArray[EnumFacing.SOUTH.ordinal()] = 4;
-            }
-            catch (NoSuchFieldError var1)
-            {
-            	
-            }
-        }
     }
 }

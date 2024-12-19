@@ -47,7 +47,7 @@ public class FusionRecipes
             {
                 for(Entry<ItemStack, ItemStack> input : entry.getValue().entrySet())
                 {
-                	if(this.comparationItem(slot_2, entry.getKey()))
+                	if(this.comparationItem(slot_2, (ItemStack)entry.getKey()))
                 	{
                 		return (ItemStack)input.getValue();
                 	}
@@ -61,6 +61,11 @@ public class FusionRecipes
 	private boolean comparationItem(ItemStack reult, ItemStack input)
 	{
 		return input.getItem() == reult.getItem() && input.getMetadata() == 32767 && input.getMetadata() == reult.getMetadata();
+	}
+	
+	public Table<ItemStack, ItemStack, ItemStack> getDualFusionList()
+	{
+		return this.fusionRecipeList;
 	}
 	
     public float getFusionExperience(ItemStack stack)

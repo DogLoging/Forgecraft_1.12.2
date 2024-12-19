@@ -1,7 +1,7 @@
 package com.modding.forgecraft;
 
 import com.modding.forgecraft.init.ModBlocks;
-import com.modding.forgecraft.network.GuiHandler;
+import com.modding.forgecraft.inventory.GuiHandler;
 import com.modding.forgecraft.proxy.CommonProxy;
 import com.modding.forgecraft.register.ModRegistryEvent;
 
