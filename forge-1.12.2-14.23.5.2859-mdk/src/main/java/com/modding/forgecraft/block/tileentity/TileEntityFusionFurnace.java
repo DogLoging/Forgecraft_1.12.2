@@ -1,6 +1,5 @@
 package com.modding.forgecraft.block.tileentity;
 
-import com.modding.forgecraft.block.BlockFusionFurnace;
 import com.modding.forgecraft.block.container.ContainerFusionFurnace;
 import com.modding.forgecraft.crafting.FusionRecipes;
 
@@ -23,9 +22,6 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
-import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityFusionFurnace extends TileEntityLockable implements IInventory, ITickable
 {
@@ -177,21 +173,9 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		return 64;
 	}
 	
-	public boolean isFuel()
-	{
-		return fuelFusionFurnace > 0;
-	}
-	
-	@SideOnly(Side.CLIENT)
-	public static boolean isFuel(IInventory inventory)
-	{
-		return inventory.getField(0) > 0;
-	}
-	
 	@Override
 	public void update()
 	{
-		boolean flag = this.isFuel();
 		boolean flag_1 = false;
 		
 		if(!world.isRemote)
@@ -204,75 +188,47 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 				stack.shrink(1);
 			}
 			
-			if(!isFuel())
+			if(fuelFusionFurnace > 0 && canFusion())
 			{
-				if(fuelFusionFurnace < 500 && canFusion())
-				{
-					fuelFusionFurnace = getItemFuel(stack);
-					
-					if(isFuel())
-					{
-						flag_1 = true;
-						
-						if(!stack.isEmpty())
-						{
-	                         Item item = stack.getItem();
-	                         stack.shrink(1);
-	                         
-	                         if(stack.isEmpty())
-	                         {
-	                        	 ItemStack item_1 = item.getContainerItem(stack);
-	                        	 this.fusionItemStacks.set(2, item_1);
-	                         }
-						}
-					}
-				}
+				++timeFusion;
 				
-				if(isFuel() && canFusion())
+				if(this.timeFusion == this.totalFusionTime)
 				{
-					++timeFusion;
+					this.processTotalBurn += 1;
+					this.timeFusion = 0;
+					this.totalFusionTime = getFusionTime(this.fusionItemStacks.get(0), this.fusionItemStacks.get(1));
 					
-					if(this.timeFusion == this.totalFusionTime)
+					if(processTotalBurn == 10)
 					{
-						this.processTotalBurn += 1;
-						this.timeFusion = 0;
-						this.totalFusionTime = getFusionTime(this.fusionItemStacks.get(0), this.fusionItemStacks.get(1));
+						timeProcess += 1;
+						fuelFusionFurnace -= 1;
 						
-						if(processTotalBurn == 10)
+						if(timeProcess == totalProcessTime)
 						{
-							timeProcess += 1;
-							fuelFusionFurnace -= 1;
+							timeProcess = 0;
+							totalProcessTime = getFusionTime(this.fusionItemStacks.get(0), this.fusionItemStacks.get(1));
+							fusionItem();
 							
-							if(timeProcess == totalProcessTime)
-							{
-								timeProcess = 0;
-								totalProcessTime = getFusionTime(this.fusionItemStacks.get(0), this.fusionItemStacks.get(1));
-								fusionItem();
-								
-								flag_1 = true;
-							}
-							
-							this.processTotalBurn = 0;
+							flag_1 = true;
 						}
+						
+						this.processTotalBurn = 0;
 					}
-				}
-				else
-				{
-					timeFusion = 0;
-					timeProcess = 0;
-					processTotalBurn = 0;
 				}
 			}
-			else if(this.fuelFusionFurnace <= 0 && this.timeFusion > 0)
+			else
 			{
-				this.timeFusion = MathHelper.clamp(this.timeFusion - 2, 0, this.totalFusionTime);
+				timeFusion = 0;
+				timeProcess = 0;
+				processTotalBurn = 0;
 			}
 			
-            if (flag != this.isFuel())
+			/*
+            if (this.fuelFusionFurnace > 0)
             {
                 flag_1 = true;
-                BlockFusionFurnace.setState(this.isFuel(), world, pos);
-            }
+                BlockFusionFurnace.setState(true, world, pos);
+            }*/
 		}
 		
 		if(flag_1)
@@ -283,7 +239,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	
 	private int getFusionTime(ItemStack slot_1, ItemStack slot_2)
 	{
-		if(fuelFusionFurnace > 50)
+		if(fuelFusionFurnace > 250)
 		{
 			return 400;
 		}
@@ -471,17 +427,17 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		switch(id)
 		{
 		case 0:
-			return fuelFusionFurnace;
-		case 1:
 			return timeFusion;
+		case 1:
+			return timeProcess;
 		case 2:
 			return totalFusionTime;
 		case 3:
-			return timeProcess;
-		case 4:
 			return totalProcessTime;
-		case 5:
+		case 4:
 			return processTotalBurn;
+		case 5:
+			return fuelFusionFurnace;
 			default:
 				return 0;
 		}
@@ -493,22 +449,22 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		switch(id)
 		{
 		case 0:
-			fuelFusionFurnace = value;
+			timeFusion = value;
 			break;
 		case 1:
-			timeFusion = value;
+			timeProcess = value;
 			break;
 		case 2:
 			totalFusionTime = value;
 			break;
 		case 3:
-			timeProcess = value;
-			break;
-		case 4:
 			totalProcessTime = value;
 			break;
-		case 5:
+		case 4:
 			processTotalBurn = value;
+			break;
+		case 5:
+			fuelFusionFurnace = value;
 			break;
 			default:
 				break;
@@ -525,10 +481,5 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	public void clear()
 	{
 		this.fusionItemStacks.clear();
-	}
-
-	public int getFuelFusion()
-	{
-		return fuelFusionFurnace;
 	}
 }

@@ -2,7 +2,6 @@ package com.modding.forgecraft.inventory;
 
 import com.modding.forgecraft.Main;
 import com.modding.forgecraft.block.container.ContainerFusionFurnace;
-import com.modding.forgecraft.block.tileentity.TileEntityFusionFurnace;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -14,20 +13,20 @@ public class GuiFusionFurnace extends GuiContainer
 {
     private static final ResourceLocation fusionGuiTextures = new ResourceLocation(Main.MODID + ":textures/gui/container/fusion_furnace_gui.png");
     private final InventoryPlayer player;
-    private final IInventory tilefusionFurnace;
+    private final IInventory tileFusion;
 
     public GuiFusionFurnace(InventoryPlayer parInventoryPlayer, IInventory parInventoryGrinder)
     {
         super(new ContainerFusionFurnace(parInventoryPlayer,  parInventoryGrinder));
         
         player = parInventoryPlayer;
-        tilefusionFurnace = parInventoryGrinder;
+        tileFusion = parInventoryGrinder;
     }
     
     @Override
     protected void drawGuiContainerForegroundLayer(int mouseX, int mouseY)
     {
-        String s = tilefusionFurnace.getDisplayName().getUnformattedText();
+        String s = tileFusion.getDisplayName().getUnformattedText();
         
         fontRenderer.drawString(s, xSize / 2 - fontRenderer.getStringWidth(s) / 2, 6, 4210752);
         fontRenderer.drawString(player.getDisplayName().getUnformattedText(), 8, ySize - 96 + 2, 4210752);
@@ -41,18 +40,41 @@ public class GuiFusionFurnace extends GuiContainer
         int marginVertical = (height - ySize) / 2;
         drawTexturedModalRect(marginHorizontal, marginVertical, 0, 0, xSize, ySize);
         
-        int progressLevel = getProgressLevel(24);
-        //drawTexturedModalRect(marginHorizontal + 79, marginVertical + 34, 176, 14, progressLevel + 1, 16);
+        int fuelLevel = getFuelLevel(24);
+        drawTexturedModalRect(marginHorizontal + 48, marginVertical + 55, 4, 167, fuelLevel, 14);
         
-        //int fuelBarWidth = 13; // Largura da barra de combustível
-        int fuelBarHeight = 14; // Altura da barra de combustível
-        drawTexturedModalRect(marginHorizontal + 48, marginVertical + 55, 4, 167, progressLevel, fuelBarHeight);
+        int timeFusionLevel = getTimeFusionLevel(13);
+        drawTexturedModalRect(marginHorizontal + 48, marginVertical + 23 + 14 - timeFusionLevel, 176, 14 - timeFusionLevel, 14, timeFusionLevel + 1);
+        
+        
+        int timeprocessLevel = getProcessTimeLevel(24);
+        drawTexturedModalRect(marginHorizontal + 91, marginVertical + 22, 176, 14, timeprocessLevel + 1, 16);
+    }
+    
+    private int getProcessTimeLevel(int pixel)
+    {
+        int i = this.tileFusion.getField(3);
+        int j = this.tileFusion.getField(1);
+        return j != 0 && i != 0 ? i * pixel / j : 0;
+    }
+    
+    private int getTimeFusionLevel(int pixel)
+    {
+        int i = this.tileFusion.getField(1);
+
+        if (i == 0)
+        {
+            i = 200;
+        }
+        
+    	return this.tileFusion.getField(2) * i / 16;
+    	
     }
 
-	private int getProgressLevel(int i)
+	private int getFuelLevel(int pixel)
 	{
-		  int currentFuel = tilefusionFurnace.getField(0); // campo que contém a quantidade de combustível
+		  int currentFuel = tileFusion.getField(5); // campo que contém a quantidade de combustível
 		  int maxFuel = 100; // valor máximo de combustível suportado
-		  return currentFuel * i / maxFuel;
+		  return currentFuel * pixel / maxFuel;
 	}
 }
