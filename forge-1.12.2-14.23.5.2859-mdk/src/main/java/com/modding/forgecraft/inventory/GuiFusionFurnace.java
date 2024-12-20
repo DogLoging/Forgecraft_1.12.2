@@ -42,13 +42,11 @@ public class GuiFusionFurnace extends GuiContainer
         drawTexturedModalRect(marginHorizontal, marginVertical, 0, 0, xSize, ySize);
         
         int progressLevel = getProgressLevel(24);
-        drawTexturedModalRect(marginHorizontal + 79, marginVertical + 34, 176, 14, progressLevel + 1, 16);
+        //drawTexturedModalRect(marginHorizontal + 79, marginVertical + 34, 176, 14, progressLevel + 1, 16);
         
-        int fuelBarWidth = 13; // Largura da barra de combustível
+        //int fuelBarWidth = 13; // Largura da barra de combustível
         int fuelBarHeight = 14; // Altura da barra de combustível
-        int fuelLevel = getProgressLevel(fuelBarWidth); // Calcula o nível de combustível
-
-        drawTexturedModalRect(marginHorizontal + 48, marginVertical + 55, 4, 167, fuelLevel, fuelBarHeight);
+        drawTexturedModalRect(marginHorizontal + 48, marginVertical + 55, 4, 167, progressLevel, fuelBarHeight);
     }
 
 	private int getProgressLevel(int i)

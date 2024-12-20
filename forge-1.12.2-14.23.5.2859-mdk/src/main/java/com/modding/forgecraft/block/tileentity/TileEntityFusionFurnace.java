@@ -198,9 +198,15 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		{
 			ItemStack stack = this.fusionItemStacks.get(2); //combustivel
 			
-			if(this.isFuel() || !stack.isEmpty() && !((((ItemStack)this.fusionItemStacks.get(0)).isEmpty()) || ((ItemStack)this.fusionItemStacks.get(1)).isEmpty()))
+			if(fuelFusionFurnace < 500)
 			{
-				if(!isFuel() && canFusion())
+				fuelFusionFurnace += getItemFuel(stack);
+				stack.shrink(1);
+			}
+			
+			if(!isFuel())
+			{
+				if(fuelFusionFurnace < 500 && canFusion())
 				{
 					fuelFusionFurnace = getItemFuel(stack);
 					
@@ -257,7 +263,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 					processTotalBurn = 0;
 				}
 			}
-			else if(!isFuel() && this.timeFusion > 0)
+			else if(this.fuelFusionFurnace <= 0 && this.timeFusion > 0)
 			{
 				this.timeFusion = MathHelper.clamp(this.timeFusion - 2, 0, this.totalFusionTime);
 			}
@@ -277,7 +283,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	
 	private int getFusionTime(ItemStack slot_1, ItemStack slot_2)
 	{
-		if(fuelFusionFurnace > 200)
+		if(fuelFusionFurnace > 50)
 		{
 			return 400;
 		}
@@ -358,7 +364,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 			
             if (item == Item.getItemFromBlock(Blocks.WOODEN_SLAB))
             {
-                return 25;
+                return 15;
             }
             else if (item == Item.getItemFromBlock(Blocks.WOOL))
             {
