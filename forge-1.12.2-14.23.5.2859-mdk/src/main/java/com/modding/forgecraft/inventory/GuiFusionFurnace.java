@@ -2,6 +2,7 @@ package com.modding.forgecraft.inventory;
 
 import com.modding.forgecraft.Main;
 import com.modding.forgecraft.block.container.ContainerFusionFurnace;
+import com.modding.forgecraft.block.tileentity.TileEntityFusionFurnace;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -32,7 +33,6 @@ public class GuiFusionFurnace extends GuiContainer
         fontRenderer.drawString(player.getDisplayName().getUnformattedText(), 8, ySize - 96 + 2, 4210752);
     }
 
-    @Override
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
     {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
@@ -43,12 +43,18 @@ public class GuiFusionFurnace extends GuiContainer
         
         int progressLevel = getProgressLevel(24);
         drawTexturedModalRect(marginHorizontal + 79, marginVertical + 34, 176, 14, progressLevel + 1, 16);
+        
+        int fuelBarWidth = 13; // Largura da barra de combustível
+        int fuelBarHeight = 14; // Altura da barra de combustível
+        int fuelLevel = getProgressLevel(fuelBarWidth); // Calcula o nível de combustível
+
+        drawTexturedModalRect(marginHorizontal + 48, marginVertical + 55, 4, 167, fuelLevel, fuelBarHeight);
     }
 
-    private int getProgressLevel(int progressIndicatorPixelWidth)
-    {
-        int ticksGrindingItemSoFar = tilefusionFurnace.getField(2); 
-        int ticksPerItem = tilefusionFurnace.getField(3);
-        return ticksPerItem != 0 && ticksGrindingItemSoFar != 0 ? ticksGrindingItemSoFar * progressIndicatorPixelWidth / ticksPerItem : 0;
-    }
+	private int getProgressLevel(int i)
+	{
+		  int currentFuel = tilefusionFurnace.getField(0); // campo que contém a quantidade de combustível
+		  int maxFuel = 100; // valor máximo de combustível suportado
+		  return currentFuel * i / maxFuel;
+	}
 }

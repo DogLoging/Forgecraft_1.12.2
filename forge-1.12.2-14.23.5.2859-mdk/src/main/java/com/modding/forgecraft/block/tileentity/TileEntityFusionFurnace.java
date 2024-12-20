@@ -24,7 +24,6 @@ import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
@@ -143,7 +142,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
         this.timeProcess = compound.getInteger("Progress");
         this.totalProcessTime = compound.getInteger("FinalProgress");
         
-        this.fuelFusionFurnace = getItemFuel(this.fusionItemStacks.get(2));
+        fuelFusionFurnace = getItemFuel(this.fusionItemStacks.get(2));
         
         if(compound.hasKey("CustomName", 8))
         {
@@ -180,7 +179,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	
 	public boolean isFuel()
 	{
-		return this.fuelFusionFurnace > 0;
+		return fuelFusionFurnace > 0;
 	}
 	
 	@SideOnly(Side.CLIENT)
@@ -203,7 +202,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 			{
 				if(!isFuel() && canFusion())
 				{
-					this.fuelFusionFurnace = getItemFuel(stack);
+					fuelFusionFurnace = getItemFuel(stack);
 					
 					if(isFuel())
 					{
@@ -236,7 +235,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 						if(processTotalBurn == 10)
 						{
 							timeProcess += 1;
-							this.fuelFusionFurnace -= 1;
+							fuelFusionFurnace -= 1;
 							
 							if(timeProcess == totalProcessTime)
 							{
@@ -278,7 +277,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	
 	private int getFusionTime(ItemStack slot_1, ItemStack slot_2)
 	{
-		if(this.fuelFusionFurnace > 200)
+		if(fuelFusionFurnace > 200)
 		{
 			return 400;
 		}
@@ -347,7 +346,6 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
         }
 	}
 	
-	@SuppressWarnings("deprecation")
 	private static int getItemFuel(ItemStack stack)
 	{
 		if(stack.isEmpty())
@@ -411,7 +409,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
                 return 20;
             }
             
-            return GameRegistry.getFuelValue(stack);
+            return 30;
         }
 	}
 	
@@ -521,5 +519,10 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	public void clear()
 	{
 		this.fusionItemStacks.clear();
+	}
+
+	public int getFuelFusion()
+	{
+		return fuelFusionFurnace;
 	}
 }

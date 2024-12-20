@@ -18,3 +18,7 @@ tile.titanium_block.name=Titanium Block
 tile.adamantium_block.name=Adamantium Block
 
 tile.fusion_furnace.name=Fusion Furnace
+
+#GUI
+
+container.fusion=Fusion Furnace

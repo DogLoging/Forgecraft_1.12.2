@@ -1,47 +1,47 @@
 {
 	"variants":
 	{
-		"process=false,facing=north":
+		"facing=north,process=false":
 		{
 			"model": "forgecraft:fusion_furnace"
 		},
 		
-		"process=false,facing=south":
+		"facing=south,process=false":
 		{
 			"model": "forgecraft:fusion_furnace",
 			"y": 180
 		},
 		
-		"process=false,facing=west":
+		"facing=west,process=false":
 		{
 			"model": "forgecraft:fusion_furnace",
 			"y": 270
 		},
 		
-		"process=false,facing=east":
+		"facing=east,process=false":
 		{
 			"model": "forgecraft:fusion_furnace",
 			"y": 90
 		},
 		
-		"process=true,facing=north":
+		"facing=north,process=true":
 		{
 			"model": "forgecraft:fusion_furnace_active"
 		},
 
-		"process=true,facing=south":
+		"facing=south,process=true":
 		{
 			"model": "forgecraft:fusion_furnace_active",
 			"y": 180
 		},
 
-		"process=true,facing=west":
+		"facing=west,process=true":
 		{
 			"model": "forgecraft:fusion_furnace_active",
 			"y": 270
 		},
 
-		"process=true,facing=east":
+		"facing=east,process=true":
 		{
 			"model": "forgecraft:fusion_furnace_active",
 			"y": 90

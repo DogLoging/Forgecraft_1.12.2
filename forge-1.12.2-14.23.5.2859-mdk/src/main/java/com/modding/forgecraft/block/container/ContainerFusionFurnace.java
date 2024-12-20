@@ -19,6 +19,7 @@ public class ContainerFusionFurnace extends Container
 {
 	private final IInventory tileFusionFurnace;
 	
+	private int fuelFusionFurnace;
 	private int processTotalBurn;
 	
 	private int timeFusion;
@@ -89,6 +90,10 @@ public class ContainerFusionFurnace extends Container
 			{
 				icontainerListener.sendWindowProperty(this, 4, this.tileFusionFurnace.getField(4));
 			}
+			else if(this.fuelFusionFurnace != this.tileFusionFurnace.getField(5))
+			{
+				icontainerListener.sendWindowProperty(this, 5, this.tileFusionFurnace.getField(5));
+			}
 		}
 		
 		this.timeFusion = this.tileFusionFurnace.getField(0);
@@ -96,6 +101,7 @@ public class ContainerFusionFurnace extends Container
 		this.totalProcessTime = this.tileFusionFurnace.getField(1);
 		this.timeProcess = this.tileFusionFurnace.getField(3);
 		this.processTotalBurn = this.tileFusionFurnace.getField(4);
+		this.fuelFusionFurnace = this.tileFusionFurnace.getField(5);
 	}
 	
 	@Override
