@@ -30,6 +30,7 @@ import net.minecraft.util.Mirror;
 import net.minecraft.util.Rotation;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -38,7 +39,6 @@ public class BlockFusionFurnace extends BlockContainer implements ITileEntityPro
 {	
 	public static final PropertyDirection FACING = BlockHorizontal.FACING;
 	public static final PropertyBool PROCESS = PropertyBool.create("process");
-	public static boolean isFuel;
 	
 	public BlockFusionFurnace()
 	{
@@ -71,10 +71,18 @@ public class BlockFusionFurnace extends BlockContainer implements ITileEntityPro
 	}
 	
 	@Override
-	public void onBlockAdded(World world, BlockPos pos, IBlockState state)
-	{
+    public void onBlockAdded(World world, BlockPos pos, IBlockState state)
+    {
+    	super.onBlockAdded(world, pos, state);
+        this.setDefaultFacing(world, pos, state);
+    }
+	
+	public void setDefaultFacing(World world, BlockPos pos, IBlockState state)
+	{	
+		super.onBlockAdded(world, pos, state);
+		
 		if(!world.isRemote)
-		{
+		{	
 			IBlockState north = world.getBlockState(pos.north());
 			IBlockState south = world.getBlockState(pos.south());
 			IBlockState west = world.getBlockState(pos.west());
@@ -103,64 +111,71 @@ public class BlockFusionFurnace extends BlockContainer implements ITileEntityPro
 		}
 	}
 	
-	   @SideOnly(Side.CLIENT)
-	    @SuppressWarnings("incomplete-switch")
-	    public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
-	    {
-	        if(isFuel)
-	        {
-	            EnumFacing enumfacing = (EnumFacing)stateIn.getValue(FACING);
-	            double d0 = (double)pos.getX() + 0.5D;
-	            double d1 = (double)pos.getY() + rand.nextDouble() * 6.0D / 16.0D;
-	            double d2 = (double)pos.getZ() + 0.5D;
-	            double d4 = rand.nextDouble() * 0.6D - 0.3D;
+	@SideOnly(Side.CLIENT)
+	@SuppressWarnings("incomplete-switch")
+	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
+	{
+		if(stateIn.getValue(PROCESS))
+		{
+			EnumFacing enumfacing = (EnumFacing)stateIn.getValue(FACING);
+			double d0 = (double)pos.getX() + 0.5D;
+			double d1 = (double)pos.getY() + rand.nextDouble() * 6.0D / 16.0D;
+			double d2 = (double)pos.getZ() + 0.5D;
+			double d4 = rand.nextDouble() * 0.6D - 0.3D;
 
-	            if (rand.nextDouble() < 0.1D)
-	            {
-	                worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, SoundEvents.BLOCK_LAVA_AMBIENT, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
-	            }
+			if (rand.nextDouble() < 0.1D)
+			{
+				worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
+			}
 
-	            switch (enumfacing)
-	            {
-	                case WEST:
-	                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 - 0.52D, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
-	                    worldIn.spawnParticle(EnumParticleTypes.LAVA, d0 - 0.52D, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
-	                    break;
-	                case EAST:
-	                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + 0.52D, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
-	                    worldIn.spawnParticle(EnumParticleTypes.LAVA, d0 + 0.52D, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
-	                    break;
-	                case NORTH:
-	                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 - 0.52D, 0.0D, 0.0D, 0.0D);
-	                    worldIn.spawnParticle(EnumParticleTypes.LAVA, d0 + d4, d1, d2 - 0.52D, 0.0D, 0.0D, 0.0D);
-	                    break;
-	                case SOUTH:
-	                    worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 + 0.52D, 0.0D, 0.0D, 0.0D);
-	                    worldIn.spawnParticle(EnumParticleTypes.LAVA, d0 + d4, d1, d2 + 0.52D, 0.0D, 0.0D, 0.0D);
-	            }
-	        }
-	    }
+			switch (enumfacing)
+			{
+			case WEST:
+				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 - 0.52D, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+				worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 - 0.52D, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+				break;
+			case EAST:
+				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + 0.52D, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+				worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + 0.52D, d1, d2 + d4, 0.0D, 0.0D, 0.0D);
+				break;
+			case NORTH:
+				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 - 0.52D, 0.0D, 0.0D, 0.0D);
+				worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + d4, d1, d2 - 0.52D, 0.0D, 0.0D, 0.0D);
+				break;
+			case SOUTH:
+				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 + 0.52D, 0.0D, 0.0D, 0.0D);
+				worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + d4, d1, d2 + 0.52D, 0.0D, 0.0D, 0.0D);
+			}
+		}	   
+	}
 	
 	public static void setState(boolean active, World world, BlockPos pos)
 	{
-		IBlockState state = world.getBlockState(pos);
-		TileEntity tileEntity = world.getTileEntity(pos);
-		
-		if(active)
+	    IBlockState state = world.getBlockState(pos);
+	    TileEntity tileEntity = world.getTileEntity(pos);
+
+	    if (tileEntity instanceof TileEntityFusionFurnace)
+	    {
+	        world.setBlockState(pos, ModBlocks.fusion_furnace.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(PROCESS, active), 3);
+	        
+	        if (tileEntity != null)
+	        {
+	            tileEntity.validate();
+	            world.setTileEntity(pos, tileEntity);
+	        }
+	    }
+	}
+	
+	@Override
+	public int getLightValue(IBlockState state, IBlockAccess world, BlockPos pos)
+	{
+		if(state.getValue(PROCESS))
 		{
-            world.setBlockState(pos, ModBlocks.fusion_furnace.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(PROCESS, true), 3);
+			return 15;
 		}
 		else
 		{
-            world.setBlockState(pos, ModBlocks.fusion_furnace.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(PROCESS, false), 3);
-		}
-		
-		isFuel = active;
-		
-		if(tileEntity != null)
-		{
-			tileEntity.validate();
-			world.setTileEntity(pos, tileEntity);
+			return 0;
 		}
 	}
 	

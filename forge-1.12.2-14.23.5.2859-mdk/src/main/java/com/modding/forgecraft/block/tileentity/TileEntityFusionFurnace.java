@@ -196,19 +196,24 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	@Override
 	public void update()
 	{
-		boolean flag = false;
-		
 		ItemStack stack = this.fusionItemStacks.get(2);
 		
 		if(fuelFusionFurnace < getMaxFuel())
 		{
 			fuelFusionFurnace += getItemFuel(stack);
 			stack.shrink(1);
+			
+			if(this.fuelFusionFurnace > getMaxFuel())
+			{
+				this.fuelFusionFurnace = getMaxFuel();
+			}
 		}
 		
-		if(!world.isRemote)
+		if(isFuel())
 		{
-			if(isFuel() && canFusion())
+			BlockFusionFurnace.setState(true, world, pos);
+			
+			if(canFusion())
 			{
 				timeFusion += 1;
 				
@@ -229,29 +234,16 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 							fusionItem();
 							totalProcessTime = getProcessTime(this.fusionItemStacks.get(0), this.fusionItemStacks.get(1));
 							timeProcess = 0;
-							
-							flag = true;
 						}
 					}
 				}
 			}
-			else
-			{
-				timeFusion = 0;
-				timeProcess = 0;
-				processTotalBurn = 0;
-			}
-			
-			if(isFuel())
-			{
-				flag = true;
-				BlockFusionFurnace.setState(true, this.world, this.pos);
-			}
 		}
-		
-		if(flag)
+		else
 		{
-			this.markDirty();
+			timeFusion = 0;
+			timeProcess = 0;
+			processTotalBurn = 0;
 		}
 	}
 	
@@ -351,7 +343,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
             }
             else if (item == Item.getItemFromBlock(Blocks.WOOL))
             {
-                return 5;
+                return 4;
             }
             else if (item == Item.getItemFromBlock(Blocks.CARPET))
             {
@@ -395,10 +387,10 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
             }
             else if (item instanceof ItemDoor && item != Items.IRON_DOOR)
             {
-                return 5;
+                return 3;
             }
             
-            return 30;
+            return 1;
         }
 	}
 	

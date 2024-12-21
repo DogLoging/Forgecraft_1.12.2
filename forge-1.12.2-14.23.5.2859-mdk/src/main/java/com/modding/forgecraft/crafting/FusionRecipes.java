@@ -41,26 +41,37 @@ public class FusionRecipes
 	
 	public ItemStack getFusionResult(ItemStack slot_1, ItemStack slot_2)
 	{
-        for (Entry<ItemStack, Map<ItemStack, ItemStack>> entry : this.fusionRecipeList.columnMap().entrySet())
-        {
-            if (this.comparationItem(slot_1, (ItemStack)entry.getKey()))
-            {
-                for(Entry<ItemStack, ItemStack> input : entry.getValue().entrySet())
-                {
-                	if(this.comparationItem(slot_2, (ItemStack)entry.getKey()))
-                	{
-                		return (ItemStack)input.getValue();
-                	}
-                }
-            }
-        }
+	    for (Entry<ItemStack, Map<ItemStack, ItemStack>> entry : this.fusionRecipeList.columnMap().entrySet())
+	    {
+	        if (this.comparationItem(slot_1, entry.getKey()))
+	        {
+	            for (Entry<ItemStack, ItemStack> input : entry.getValue().entrySet())
+	            {
+	                if (this.comparationItem(slot_2, input.getKey()))
+	                {
+	                    return input.getValue();
+	                }
+	            }
+	        }
+
+	        if (this.comparationItem(slot_2, entry.getKey()))
+	        {
+	            for (Entry<ItemStack, ItemStack> input : entry.getValue().entrySet())
+	            {
+	                if (this.comparationItem(slot_1, input.getKey()))
+	                {
+	                    return input.getValue();
+	                }
+	            }
+	        }
+	    }
 
         return ItemStack.EMPTY;
 	}
 
 	private boolean comparationItem(ItemStack reult, ItemStack input)
 	{
-		return input.getItem() == reult.getItem() && input.getMetadata() == 32767 || input.getMetadata() == reult.getMetadata();
+		return input.getItem() == reult.getItem() && (input.getMetadata() == 32767 || input.getMetadata() == reult.getMetadata());
 	}
 	
 	public Table<ItemStack, ItemStack, ItemStack> getDualFusionList()

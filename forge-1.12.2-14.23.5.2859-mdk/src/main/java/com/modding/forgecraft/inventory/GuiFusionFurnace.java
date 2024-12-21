@@ -31,6 +31,12 @@ public class GuiFusionFurnace extends GuiContainer
         
         fontRenderer.drawString(s, xSize / 2 - fontRenderer.getStringWidth(s) / 2, 6, 4210752);
         fontRenderer.drawString(player.getDisplayName().getUnformattedText(), 8, ySize - 96 + 2, 4210752);
+        
+        int marginHorizontal = (width - xSize) / 2;
+        int marginVertical = (height - ySize) / 2;
+        
+        String fuelText = this.tileFusion.getField(5) + " / " + 5000;
+        fontRenderer.drawString(fuelText, 50, 44, 0x7d7d7d);
     }
 
     protected void drawGuiContainerBackgroundLayer(float partialTicks, int mouseX, int mouseY)
@@ -45,7 +51,6 @@ public class GuiFusionFurnace extends GuiContainer
         {
 	        int fuelLevel = getFuelLevel(24);
 	        drawTexturedModalRect(marginHorizontal + 48, marginVertical + 55, 4, 167, fuelLevel, 14);
-	        
         }
         
         int timeFusionLevel = getTimeFusionLevel(13);
@@ -57,10 +62,6 @@ public class GuiFusionFurnace extends GuiContainer
     
     private int getProcessTimeLevel(int pixel)
     {
-        /*
-         * erro de definição na variavel local currentProcess e maxProcess não retornam o valor desejado, devo verificar o tileEntity
-         * */
-    	
         int currentProcess = this.tileFusion.getField(1);
         int maxProcess = this.tileFusion.getField(3); 
         
@@ -78,7 +79,7 @@ public class GuiFusionFurnace extends GuiContainer
     private int getFuelLevel(int pixel)
     {
         int currentFuel = this.tileFusion.getField(5);
-        int maxFuel = (5000 - 4) / 4 ;
+        int maxFuel = (5000 - 4) / 4;
         
         return maxFuel != 0 && currentFuel != 0 ? currentFuel * pixel / maxFuel : 0;
     }
