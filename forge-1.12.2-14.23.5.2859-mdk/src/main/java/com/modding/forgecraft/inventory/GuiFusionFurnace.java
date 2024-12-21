@@ -2,6 +2,7 @@ package com.modding.forgecraft.inventory;
 
 import com.modding.forgecraft.Main;
 import com.modding.forgecraft.block.container.ContainerFusionFurnace;
+import com.modding.forgecraft.block.tileentity.TileEntityFusionFurnace;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
@@ -40,41 +41,45 @@ public class GuiFusionFurnace extends GuiContainer
         int marginVertical = (height - ySize) / 2;
         drawTexturedModalRect(marginHorizontal, marginVertical, 0, 0, xSize, ySize);
         
-        int fuelLevel = getFuelLevel(24);
-        drawTexturedModalRect(marginHorizontal + 48, marginVertical + 55, 4, 167, fuelLevel, 14);
+        if(TileEntityFusionFurnace.isFuel(tileFusion))
+        {
+	        int fuelLevel = getFuelLevel(24);
+	        drawTexturedModalRect(marginHorizontal + 48, marginVertical + 55, 4, 167, fuelLevel, 14);
+	        
+        }
         
         int timeFusionLevel = getTimeFusionLevel(13);
-        drawTexturedModalRect(marginHorizontal + 48, marginVertical + 23 + 14 - timeFusionLevel, 176, 14 - timeFusionLevel, 14, timeFusionLevel + 1);
-        
+        drawTexturedModalRect(marginHorizontal + 47, marginVertical + 35 - timeFusionLevel, 176, 13 - timeFusionLevel, 14, timeFusionLevel);
         
         int timeprocessLevel = getProcessTimeLevel(24);
-        drawTexturedModalRect(marginHorizontal + 91, marginVertical + 22, 176, 14, timeprocessLevel + 1, 16);
+        drawTexturedModalRect(marginHorizontal + 91 , marginVertical + 22, 176, 14, timeprocessLevel + 1, 14);
     }
     
     private int getProcessTimeLevel(int pixel)
     {
-        int i = this.tileFusion.getField(3);
-        int j = this.tileFusion.getField(1);
-        return j != 0 && i != 0 ? i * pixel / j : 0;
+        /*
+         * erro de definição na variavel local currentProcess e maxProcess não retornam o valor desejado, devo verificar o tileEntity
+         * */
+    	
+        int currentProcess = this.tileFusion.getField(1);
+        int maxProcess = this.tileFusion.getField(3); 
+        
+        return maxProcess != 0 && currentProcess != 0 ? currentProcess * pixel / maxProcess : 0;
     }
-    
+
     private int getTimeFusionLevel(int pixel)
     {
-        int i = this.tileFusion.getField(1);
-
-        if (i == 0)
-        {
-            i = 200;
-        }
-        
-    	return this.tileFusion.getField(2) * i / 16;
-    	
+        int currentTime = this.tileFusion.getField(0);
+        int maxTime = this.tileFusion.getField(2);
+       
+        return maxTime != 0 && currentTime != 0 ? currentTime * pixel / maxTime : 0;
     }
 
-	private int getFuelLevel(int pixel)
-	{
-		  int currentFuel = tileFusion.getField(5); // campo que contém a quantidade de combustível
-		  int maxFuel = 100; // valor máximo de combustível suportado
-		  return currentFuel * pixel / maxFuel;
-	}
+    private int getFuelLevel(int pixel)
+    {
+        int currentFuel = this.tileFusion.getField(5);
+        int maxFuel = (5000 - 4) / 4 ;
+        
+        return maxFuel != 0 && currentFuel != 0 ? currentFuel * pixel / maxFuel : 0;
+    }
 }

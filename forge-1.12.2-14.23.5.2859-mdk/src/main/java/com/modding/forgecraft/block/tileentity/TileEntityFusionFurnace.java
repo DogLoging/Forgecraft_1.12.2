@@ -22,6 +22,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityLockable;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class TileEntityFusionFurnace extends TileEntityLockable implements IInventory, ITickable
 {
@@ -110,12 +112,10 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		
 		if(index == 0 && index + 1 == 1 && !isAlreadyInSlot)
 		{
-			ItemStack itemstack2 = (ItemStack)fusionItemStacks.get(index + 1);
-			
-			totalFusionTime = getFusionTime(itemstack, itemstack2);
+			totalFusionTime = getFusionTime(this.fuelFusionFurnace);
 			timeFusion = 0;
 			
-			totalProcessTime = getFusionTime(itemstack, itemstack2);
+			totalProcessTime = getProcessTime(this.fusionItemStacks.get(0), this.fusionItemStacks.get(1));
 			timeProcess = 0;
 			
 			processTotalBurn = 0;
@@ -173,75 +173,76 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		return 64;
 	}
 	
+	public int getMaxFuel()
+	{
+		return 5000;
+	}
+	
+	public boolean isFuel()
+	{
+		return fuelFusionFurnace > 0;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static boolean isFuel(IInventory inventory)
+	{
+		return inventory.getField(5) > 0;
+	}
+	
 	@Override
 	public void update()
 	{
-		boolean flag_1 = false;
+		ItemStack stack = this.fusionItemStacks.get(2);
 		
-		if(!world.isRemote)
+		if(fuelFusionFurnace < getMaxFuel())
 		{
-			ItemStack stack = this.fusionItemStacks.get(2); //combustivel
+			fuelFusionFurnace += getItemFuel(stack);
+			stack.shrink(1);
+		}
+		
+		if(isFuel())
+		{
+			timeFusion += 1;
 			
-			if(fuelFusionFurnace < 500)
+			if(this.timeFusion == this.totalFusionTime)
 			{
-				fuelFusionFurnace += getItemFuel(stack);
-				stack.shrink(1);
-			}
-			
-			if(fuelFusionFurnace > 0 && canFusion())
-			{
-				++timeFusion;
+				this.processTotalBurn += 1;
+				this.timeFusion = 0;
+				this.totalFusionTime = getFusionTime(this.fuelFusionFurnace);
 				
-				if(this.timeFusion == this.totalFusionTime)
+				if(this.processTotalBurn == 10)
 				{
-					this.processTotalBurn += 1;
-					this.timeFusion = 0;
-					this.totalFusionTime = getFusionTime(this.fusionItemStacks.get(0), this.fusionItemStacks.get(1));
+					timeProcess += 10;
+					fuelFusionFurnace -= 50;
+					this.processTotalBurn = 0;
 					
-					if(processTotalBurn == 10)
+					if(this.timeProcess == totalProcessTime)
 					{
-						timeProcess += 1;
-						fuelFusionFurnace -= 1;
-						
-						if(timeProcess == totalProcessTime)
-						{
-							timeProcess = 0;
-							totalProcessTime = getFusionTime(this.fusionItemStacks.get(0), this.fusionItemStacks.get(1));
-							fusionItem();
-							
-							flag_1 = true;
-						}
-						
-						this.processTotalBurn = 0;
+						fusionItem();
+						totalProcessTime = getProcessTime(this.fusionItemStacks.get(0), this.fusionItemStacks.get(1));
+						timeProcess = 0;
 					}
 				}
 			}
-			else
-			{
-				timeFusion = 0;
-				timeProcess = 0;
-				processTotalBurn = 0;
-			}
-			
-			/*
-            if (this.fuelFusionFurnace > 0)
-            {
-                flag_1 = true;
-                BlockFusionFurnace.setState(true, world, pos);
-            }*/
 		}
 		
-		if(flag_1)
-		{
-			this.markDirty();
-		}
+		this.markDirty();
 	}
 	
-	private int getFusionTime(ItemStack slot_1, ItemStack slot_2)
+	private int getProcessTime(ItemStack slot_1, ItemStack slot2)
 	{
-		if(fuelFusionFurnace > 250)
+		return 200;
+	}
+
+	private int getFusionTime(int fuelLevel)
+	{
+		if(fuelLevel > getMaxFuel() / 2)
 		{
-			return 400;
+			return 50;
+		}
+		else if(fuelLevel > getMaxFuel() / 3)
+		{
+			return 150;
 		}
 		else
 		{
@@ -320,55 +321,55 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 			
             if (item == Item.getItemFromBlock(Blocks.WOODEN_SLAB))
             {
-                return 15;
+                return 1;
             }
             else if (item == Item.getItemFromBlock(Blocks.WOOL))
             {
-                return 30;
+                return 5;
             }
             else if (item == Item.getItemFromBlock(Blocks.CARPET))
             {
-                return 4;
+                return 2;
             }
             else if (item == Item.getItemFromBlock(Blocks.LADDER))
             {
-                return 15;
+                return 3;
             }
             else if (item == Item.getItemFromBlock(Blocks.WOODEN_BUTTON))
             {
-                return 10;
+                return 1;
             }
             else if (Block.getBlockFromItem(item).getDefaultState().getMaterial() == Material.WOOD)
             {
-                return 30;
+                return 10;
             }
             else if (item == Item.getItemFromBlock(Blocks.COAL_BLOCK))
             {
-                return 45;
+                return 25;
             }
             else if (item instanceof ItemTool && "WOOD".equals(((ItemTool)item).getToolMaterialName()))
             {
-                return 20;
+                return 1;
             }
             else if (item instanceof ItemSword && "WOOD".equals(((ItemSword)item).getToolMaterialName()))
             {
-                return 20;
+                return 1;
             }
             else if (item instanceof ItemHoe && "WOOD".equals(((ItemHoe)item).getMaterialName()))
             {
-                return 20;
+                return 1;
             }
             else if (item == Items.STICK)
             {
-                return 10;
+                return 1;
             }
             if (item == Items.BLAZE_ROD)
             {
-                return 150;
+                return 30;
             }
             else if (item instanceof ItemDoor && item != Items.IRON_DOOR)
             {
-                return 20;
+                return 5;
             }
             
             return 30;

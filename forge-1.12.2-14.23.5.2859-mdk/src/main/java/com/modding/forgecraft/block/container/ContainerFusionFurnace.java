@@ -70,19 +70,19 @@ public class ContainerFusionFurnace extends Container
 		{
 			IContainerListener icontainerListener = this.listeners.get(i);
 			
-			if(this.totalTimeFusion != this.tileFusionFurnace.getField(2))
+			if(this.timeFusion != this.tileFusionFurnace.getField(0))
 			{
-				icontainerListener.sendWindowProperty(this, 2, this.tileFusionFurnace.getField(2));
+				icontainerListener.sendWindowProperty(this, 2, this.tileFusionFurnace.getField(0));
 			}
-			else if(this.timeFusion != this.tileFusionFurnace.getField(0))
+			else if(this.timeProcess != this.tileFusionFurnace.getField(1))
 			{
-				icontainerListener.sendWindowProperty(this, 0, this.tileFusionFurnace.getField(0));
+				icontainerListener.sendWindowProperty(this, 0, this.tileFusionFurnace.getField(1));
 			}
-			else if(this.totalProcessTime != this.tileFusionFurnace.getField(1))
+			else if(this.totalTimeFusion != this.tileFusionFurnace.getField(2))
 			{
-				icontainerListener.sendWindowProperty(this, 1, this.tileFusionFurnace.getField(1));
+				icontainerListener.sendWindowProperty(this, 1, this.tileFusionFurnace.getField(2));
 			}
-			else if(this.timeProcess != this.tileFusionFurnace.getField(3))
+			else if(this.totalProcessTime != this.tileFusionFurnace.getField(3))
 			{
 				icontainerListener.sendWindowProperty(this, 3, this.tileFusionFurnace.getField(3));
 			}
@@ -97,9 +97,9 @@ public class ContainerFusionFurnace extends Container
 		}
 		
 		this.timeFusion = this.tileFusionFurnace.getField(0);
+		this.timeProcess = this.tileFusionFurnace.getField(1);
 		this.totalTimeFusion = this.tileFusionFurnace.getField(2);
-		this.totalProcessTime = this.tileFusionFurnace.getField(1);
-		this.timeProcess = this.tileFusionFurnace.getField(3);
+		this.totalProcessTime = this.tileFusionFurnace.getField(3);
 		this.processTotalBurn = this.tileFusionFurnace.getField(4);
 		this.fuelFusionFurnace = this.tileFusionFurnace.getField(5);
 	}
@@ -121,7 +121,7 @@ public class ContainerFusionFurnace extends Container
     public ItemStack transferStackInSlot(EntityPlayer playerIn, int index)
     {
         ItemStack itemstack = ItemStack.EMPTY;
-        Slot slot = this.inventorySlots.get(index);
+        Slot slot = (Slot)this.inventorySlots.get(index);
 
         if (slot != null && slot.getHasStack())
         {
@@ -147,31 +147,31 @@ public class ContainerFusionFurnace extends Container
                     {
                         return ItemStack.EMPTY;
                     }
-                }
-                else if (TileEntityFusionFurnace.isItemFuel(itemstack1))
-                {
-                    if (!this.mergeItemStack(itemstack1, 2, 3, false))
+                    else if (TileEntityFusionFurnace.isItemFuel(itemstack1))
+                    {
+                        if (!this.mergeItemStack(itemstack1, 2, 3, false))
+                        {
+                            return ItemStack.EMPTY;
+                        }
+                    }
+                    else if (TileEntityFusionFurnace.isItemFuel(itemstack1))
+                    {
+                        if (!this.mergeItemStack(itemstack1, 2, 3, false))
+                        {
+                            return ItemStack.EMPTY;
+                        }
+                    }
+                    else if (index >= 4 && index < 31)
+                    {
+                        if (!this.mergeItemStack(itemstack1, 31, 40, false))
+                        {
+                            return ItemStack.EMPTY;
+                        }
+                    }
+                    else if (index >= 31 && index < 40 && !this.mergeItemStack(itemstack1, 4, 31, false))
                     {
                         return ItemStack.EMPTY;
                     }
-                }
-                else if (TileEntityFusionFurnace.isItemFuel(itemstack1))
-                {
-                    if (!this.mergeItemStack(itemstack1, 2, 3, false))
-                    {
-                        return ItemStack.EMPTY;
-                    }
-                }
-                else if (index >= 4 && index < 31)
-                {
-                    if (!this.mergeItemStack(itemstack1, 31, 40, false))
-                    {
-                        return ItemStack.EMPTY;
-                    }
-                }
-                else if (index >= 31 && index < 40 && !this.mergeItemStack(itemstack1, 4, 31, false))
-                {
-                    return ItemStack.EMPTY;
                 }
             }
             else if (!this.mergeItemStack(itemstack1, 4, 40, false))
