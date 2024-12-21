@@ -200,7 +200,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 			stack.shrink(1);
 		}
 		
-		if(isFuel())
+		if(isFuel() && canFusion())
 		{
 			timeFusion += 1;
 			
@@ -224,6 +224,12 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 					}
 				}
 			}
+		}
+		else
+		{
+			timeFusion = 0;
+			timeProcess = 0;
+			processTotalBurn = 0;
 		}
 		
 		this.markDirty();

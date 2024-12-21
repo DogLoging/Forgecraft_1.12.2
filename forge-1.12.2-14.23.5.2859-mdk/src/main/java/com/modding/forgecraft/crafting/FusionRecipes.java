@@ -60,7 +60,7 @@ public class FusionRecipes
 
 	private boolean comparationItem(ItemStack reult, ItemStack input)
 	{
-		return input.getItem() == reult.getItem() && input.getMetadata() == 32767 && input.getMetadata() == reult.getMetadata();
+		return input.getItem() == reult.getItem() && input.getMetadata() == 32767 || input.getMetadata() == reult.getMetadata();
 	}
 	
 	public Table<ItemStack, ItemStack, ItemStack> getDualFusionList()

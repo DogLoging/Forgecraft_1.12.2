@@ -72,15 +72,15 @@ public class ContainerFusionFurnace extends Container
 			
 			if(this.timeFusion != this.tileFusionFurnace.getField(0))
 			{
-				icontainerListener.sendWindowProperty(this, 2, this.tileFusionFurnace.getField(0));
+				icontainerListener.sendWindowProperty(this, 0, this.tileFusionFurnace.getField(0));
 			}
 			else if(this.timeProcess != this.tileFusionFurnace.getField(1))
 			{
-				icontainerListener.sendWindowProperty(this, 0, this.tileFusionFurnace.getField(1));
+				icontainerListener.sendWindowProperty(this, 1, this.tileFusionFurnace.getField(1));
 			}
 			else if(this.totalTimeFusion != this.tileFusionFurnace.getField(2))
 			{
-				icontainerListener.sendWindowProperty(this, 1, this.tileFusionFurnace.getField(2));
+				icontainerListener.sendWindowProperty(this, 2, this.tileFusionFurnace.getField(2));
 			}
 			else if(this.totalProcessTime != this.tileFusionFurnace.getField(3))
 			{
