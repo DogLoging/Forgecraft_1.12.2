@@ -1,5 +1,6 @@
 package com.modding.forgecraft;
 
+import com.modding.forgecraft.block.tileentity.RegistryTileEntity;
 import com.modding.forgecraft.init.ModBlocks;
 import com.modding.forgecraft.inventory.GuiHandler;
 import com.modding.forgecraft.proxy.CommonProxy;
@@ -31,6 +32,7 @@ public class Main
 	public static void preInit(FMLPreInitializationEvent event)
 	{
 		ModBlocks.initialization();
+		RegistryTileEntity.initialization();
 		
 		CommonProxy.registerEvent(new ModRegistryEvent());
 		proxy.preInit();

@@ -2,9 +2,12 @@
 	"parent": "block/orientable",
 	"textures":
 	{
-		"front": "forgecraft:blocks/fusion_furnace_front",
-		"top": "forgecraft:blocks/fusion_furnace_top",
-		"side": "forgecraft:blocks/fusion_furnace_full",
-		"down": "forgecraft:blocks/fusion_furnace_bottom"
+		"particle": "forgecraft:blocks/fusion_furnace_side",
+		"up": "forgecraft:blocks/fusion_furnace_top",
+		"down": "forgecraft:blocks/fusion_furnace_bottom",
+		"north": "forgecraft:blocks/fusion_furnace_full",
+		"east": "forgecraft:blocks/fusion_furnace_side",
+		"south": "forgecraft:blocks/fusion_furnace_side",
+		"west": "forgecraft:blocks/fusion_furnace_side"
 	}
 }

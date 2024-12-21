@@ -1,5 +1,6 @@
 package com.modding.forgecraft.block.tileentity;
 
+import com.modding.forgecraft.block.BlockFusionFurnace;
 import com.modding.forgecraft.block.container.ContainerFusionFurnace;
 import com.modding.forgecraft.crafting.FusionRecipes;
 
@@ -138,7 +139,8 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
         this.timeProcess = compound.getInteger("Progress");
         this.totalProcessTime = compound.getInteger("FinalProgress");
         
-        fuelFusionFurnace = getItemFuel(this.fusionItemStacks.get(2));
+        this.fuelFusionFurnace = getItemFuel(this.fusionItemStacks.get(2));
+        this.fuelFusionFurnace = compound.getInteger("Fuel");
         
         if(compound.hasKey("CustomName", 8))
         {
@@ -156,6 +158,8 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		
 		compound.setInteger("Progress", (short)timeProcess);
 		compound.setInteger("FinalProgress", (short)totalProcessTime);
+		
+		compound.setInteger("Fuel", this.fuelFusionFurnace);
 		
 		ItemStackHelper.saveAllItems(compound, this.fusionItemStacks);
 		
@@ -192,6 +196,8 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	@Override
 	public void update()
 	{
+		boolean flag = false;
+		
 		ItemStack stack = this.fusionItemStacks.get(2);
 		
 		if(fuelFusionFurnace < getMaxFuel())
@@ -200,39 +206,53 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 			stack.shrink(1);
 		}
 		
-		if(isFuel() && canFusion())
+		if(!world.isRemote)
 		{
-			timeFusion += 1;
-			
-			if(this.timeFusion == this.totalFusionTime)
+			if(isFuel() && canFusion())
 			{
-				this.processTotalBurn += 1;
-				this.timeFusion = 0;
-				this.totalFusionTime = getFusionTime(this.fuelFusionFurnace);
+				timeFusion += 1;
 				
-				if(this.processTotalBurn == 10)
+				if(this.timeFusion == this.totalFusionTime)
 				{
-					timeProcess += 10;
-					fuelFusionFurnace -= 50;
-					this.processTotalBurn = 0;
+					this.processTotalBurn += 1;
+					this.timeFusion = 0;
+					this.totalFusionTime = getFusionTime(this.fuelFusionFurnace);
 					
-					if(this.timeProcess == totalProcessTime)
+					if(this.processTotalBurn == 10)
 					{
-						fusionItem();
-						totalProcessTime = getProcessTime(this.fusionItemStacks.get(0), this.fusionItemStacks.get(1));
-						timeProcess = 0;
+						timeProcess += 10;
+						fuelFusionFurnace -= 50;
+						this.processTotalBurn = 0;
+						
+						if(this.timeProcess == totalProcessTime)
+						{
+							fusionItem();
+							totalProcessTime = getProcessTime(this.fusionItemStacks.get(0), this.fusionItemStacks.get(1));
+							timeProcess = 0;
+							
+							flag = true;
+						}
 					}
 				}
 			}
-		}
-		else
-		{
-			timeFusion = 0;
-			timeProcess = 0;
-			processTotalBurn = 0;
+			else
+			{
+				timeFusion = 0;
+				timeProcess = 0;
+				processTotalBurn = 0;
+			}
+			
+			if(isFuel())
+			{
+				flag = true;
+				BlockFusionFurnace.setState(true, this.world, this.pos);
+			}
 		}
 		
-		this.markDirty();
+		if(flag)
+		{
+			this.markDirty();
+		}
 	}
 	
 	private int getProcessTime(ItemStack slot_1, ItemStack slot2)
