@@ -62,7 +62,7 @@ public class GuiFusionFurnace extends GuiContainer
         drawTexturedModalRect(marginHorizontal + 47, marginVertical + 35 - timeFusionLevel, 176, 13 - timeFusionLevel, 14, timeFusionLevel);
         
         int timeprocessLevel = getProcessTimeLevel(24);
-        drawTexturedModalRect(marginHorizontal + 91 , marginVertical + 22, 176, 14, timeprocessLevel + 1, 14);
+        drawTexturedModalRect(marginHorizontal + 91 , marginVertical + 22, 176, 14, timeprocessLevel + 1, 16);
     }
     
     private int getProcessTimeLevel(int pixel)

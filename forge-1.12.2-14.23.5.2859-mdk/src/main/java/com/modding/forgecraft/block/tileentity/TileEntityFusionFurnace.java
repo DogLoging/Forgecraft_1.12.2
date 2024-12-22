@@ -3,6 +3,7 @@ package com.modding.forgecraft.block.tileentity;
 import com.modding.forgecraft.block.BlockFusionFurnace;
 import com.modding.forgecraft.block.container.ContainerFusionFurnace;
 import com.modding.forgecraft.crafting.FusionRecipes;
+import com.modding.forgecraft.inventory.slot.SlotFuelFusionFurnace;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -13,7 +14,9 @@ import net.minecraft.init.Items;
 import net.minecraft.inventory.Container;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.ItemStackHelper;
+import net.minecraft.inventory.SlotFurnaceFuel;
 import net.minecraft.item.Item;
+import net.minecraft.item.ItemBoat;
 import net.minecraft.item.ItemDoor;
 import net.minecraft.item.ItemHoe;
 import net.minecraft.item.ItemStack;
@@ -21,6 +24,7 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntityLockable;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.NonNullList;
 import net.minecraftforge.fml.relauncher.Side;
@@ -201,7 +205,21 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		if(fuelFusionFurnace < getMaxFuel())
 		{
 			fuelFusionFurnace += getItemFuel(stack);
-			stack.shrink(1);
+            
+            if (this.isFuel())
+            {
+                if (!stack.isEmpty() && stack.getItem() != Items.BUCKET)
+                {
+                    Item item = stack.getItem();
+                    stack.shrink(1);
+                    
+                    if (stack.isEmpty())
+                    {
+                    	ItemStack item1 = item.getContainerItem(stack);
+                        this.fusionItemStacks.set(2, item1);
+                    }
+                }
+            }
 			
 			if(this.fuelFusionFurnace > getMaxFuel())
 			{
@@ -381,16 +399,44 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
             {
                 return 1;
             }
-            if (item == Items.BLAZE_ROD)
+            else if (item != Items.BOW && item != Items.FISHING_ROD)
             {
-                return 30;
+                if (item == Items.SIGN)
+                {
+                    return 10;
+                }
+                else if (item == Items.COAL)
+                {
+                    return 15;
+                }
+                else if (item == Items.LAVA_BUCKET)
+                {
+                    return 35;
+                }
+                else if (item != Item.getItemFromBlock(Blocks.SAPLING) && item != Items.BOWL)
+                {
+                    if (item == Items.BLAZE_ROD)
+                    {
+                        return 50;
+                    }
+                    else if (item instanceof ItemDoor && item != Items.IRON_DOOR)
+                    {
+                        return 15;
+                    }
+                    else
+                    {
+                        return item instanceof ItemBoat ? 15 : 0;
+                    }
+                }
+                else
+                {
+                    return 15;
+                }
             }
-            else if (item instanceof ItemDoor && item != Items.IRON_DOOR)
+            else
             {
-                return 3;
+                return 1;
             }
-            
-            return 1;
         }
 	}
 	
@@ -424,7 +470,8 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		}
 		else
 		{
-			return isItemFuel(stack);
+			ItemStack itemstack = this.fusionItemStacks.get(2);
+			return isItemFuel(stack) || SlotFuelFusionFurnace.isBucket(stack) && itemstack.getItem() != Items.BUCKET;
 		}
 	}
 	

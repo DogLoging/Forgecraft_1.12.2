@@ -1,5 +1,7 @@
 package com.modding.forgecraft.inventory.slot;
 
+import com.modding.forgecraft.block.tileentity.TileEntityFusionFurnace;
+
 import net.minecraft.init.Items;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
@@ -15,7 +17,7 @@ public class SlotFuelFusionFurnace extends Slot
 	
     public boolean isItemValid(ItemStack stack)
     {
-        return TileEntityFurnace.isItemFuel(stack) || isBucket(stack);
+        return TileEntityFusionFurnace.isItemFuel(stack) || isBucket(stack);
     }
 
     public int getItemStackLimit(ItemStack stack)
