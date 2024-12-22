@@ -238,12 +238,12 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 					}
 				}
 			}
-		}
-		else
-		{
-			timeFusion = 0;
-			timeProcess = 0;
-			processTotalBurn = 0;
+			else
+			{
+				timeFusion = 0;
+				timeProcess = 0;
+				processTotalBurn = 0;
+			}
 		}
 	}
 	
