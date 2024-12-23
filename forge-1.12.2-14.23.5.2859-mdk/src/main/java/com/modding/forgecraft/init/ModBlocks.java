@@ -14,11 +14,15 @@ public class ModBlocks
 {
 	public static Block copper_block, steel_block, titanium_block, adamantium_block;
 	
+	public static Block copper_brick, steel_brick, titanium_brick, adamantium_brick;
+	
+	public static Block pillar;
+	
 	public static Block fusion_furnace;
 	
 	public static int id;
-	public static Block[] listBlock = new Block[5];
-	public static Item[] listItem = new Item[5];
+	public static Block[] listBlock = new Block[10];
+	public static Item[] listItem = new Item[10];
 	
 	public static void initialization()
 	{
@@ -26,7 +30,14 @@ public class ModBlocks
 		steel_block = register("steel_block", new Block(Material.IRON).setCreativeTab(CreativeTabs.BUILDING_BLOCKS));
 		titanium_block = register("titanium_block", new Block(Material.IRON).setCreativeTab(CreativeTabs.BUILDING_BLOCKS));
 		adamantium_block = register("adamantium_block", new Block(Material.IRON).setCreativeTab(CreativeTabs.BUILDING_BLOCKS));
-	
+		
+		copper_brick = register("copper_brick", new Block(Material.IRON).setCreativeTab(CreativeTabs.BUILDING_BLOCKS));
+		steel_brick = register("steel_brick", new Block(Material.IRON).setCreativeTab(CreativeTabs.BUILDING_BLOCKS));
+		titanium_brick = register("titanium_brick", new Block(Material.IRON).setCreativeTab(CreativeTabs.BUILDING_BLOCKS));
+		adamantium_brick = register("adamantium_brick", new Block(Material.IRON).setCreativeTab(CreativeTabs.BUILDING_BLOCKS));
+		
+		pillar = register("pillar", new Block(Material.IRON).setCreativeTab(CreativeTabs.BUILDING_BLOCKS));
+		
 		fusion_furnace = register("fusion_furnace", new BlockFusionFurnace().setCreativeTab(CreativeTabs.DECORATIONS));
 	}
 	

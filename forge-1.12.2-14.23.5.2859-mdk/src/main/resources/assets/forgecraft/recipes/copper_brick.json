@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern":
+	[
+		"##",
+		"##"
+	],
+	
+	"key":
+	{
+		"#":
+		{
+			"item": "forgecraft:copper_block"
+		}
+	},
+	
+	"result":
+	{
+		"item": "forgecraft:copper_brick",
+		"count": 4
+	}
+}

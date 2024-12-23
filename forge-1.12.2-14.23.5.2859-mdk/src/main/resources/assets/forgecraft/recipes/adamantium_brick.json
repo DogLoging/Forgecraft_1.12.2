@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern":
+	[
+		"##",
+		"##"
+	],
+	
+	"key":
+	{
+		"#":
+		{
+			"item": "forgecraft:adamantium_block"
+		}
+	},
+	
+	"result":
+	{
+		"item": "forgecraft:adamantium_brick",
+		"count": 4
+	}
+}

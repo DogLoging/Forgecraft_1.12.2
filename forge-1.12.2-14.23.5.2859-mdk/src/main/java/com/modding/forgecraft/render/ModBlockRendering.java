@@ -19,7 +19,14 @@ public class ModBlockRendering
 		register("steel_block", ModBlocks.steel_block);
 		register("titanium_block", ModBlocks.titanium_block);
 		register("adamantium_block", ModBlocks.adamantium_block);
-	
+		
+		register("copper_brick", ModBlocks.copper_brick);
+		register("steel_brick", ModBlocks.steel_brick);
+		register("titanium_brick", ModBlocks.titanium_brick);
+		register("adamantium_brick", ModBlocks.adamantium_brick);
+		
+		register("pillar", ModBlocks.pillar);
+		
 		register("fusion_furnace", ModBlocks.fusion_furnace);
 	}
 	

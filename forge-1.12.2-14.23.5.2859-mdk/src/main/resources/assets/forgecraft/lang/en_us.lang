@@ -17,6 +17,13 @@ tile.steel_block.name=Steel Block
 tile.titanium_block.name=Titanium Block
 tile.adamantium_block.name=Adamantium Block
 
+tile.copper_brick.name=Bronze Brick
+tile.steel_brick.name=Steel Brick
+tile.titanium_brick.name=Titanium Brick
+tile.adamantium_brick.name=Adamantium Brick
+
+tile.pillar.name=Bronze Pillar
+
 tile.fusion_furnace.name=Fusion Furnace
 
 #GUI
