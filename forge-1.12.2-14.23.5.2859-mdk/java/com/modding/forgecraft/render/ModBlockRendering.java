@@ -30,6 +30,11 @@ public class ModBlockRendering
 		register("titanium_pillar", ModBlocks.titanium_pillar);
 		register("adamantium_pillar", ModBlocks.adamantium_pillar);
 		
+		register("copper_stair", ModBlocks.copper_stair);
+		register("steel_stair", ModBlocks.steel_stair);
+		register("titanium_stair", ModBlocks.titanium_stair);
+		register("adamantium_stair", ModBlocks.adamantium_stair);
+		
 		register("fusion_furnace", ModBlocks.fusion_furnace);
 	}
 	

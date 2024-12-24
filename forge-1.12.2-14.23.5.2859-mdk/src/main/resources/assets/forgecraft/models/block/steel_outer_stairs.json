@@ -1,0 +1,8 @@
+{
+    "parent": "block/outer_stairs",
+    "textures": {
+        "bottom": "forgecraft:blocks/steel_brick",
+        "top": "forgecraft:blocks/steel_brick",
+        "side": "forgecraft:blocks/steel_brick"
+    }
+}

@@ -27,6 +27,11 @@ tile.steel_pillar.name=Steel Pillar
 tile.titanium_pillar.name=Titanium Pillar
 tile.adamantium_pillar.name=Adamantium Pillar
 
+tile.copper_stair.name=Bronze Stair
+tile.steel_stair.name=Steel Stair
+tile.titanium_stair.name=Titanium Stair
+tile.adamantium_stair.name=Adamantium Stair
+
 tile.fusion_furnace.name=Fusion Furnace
 
 #GUI

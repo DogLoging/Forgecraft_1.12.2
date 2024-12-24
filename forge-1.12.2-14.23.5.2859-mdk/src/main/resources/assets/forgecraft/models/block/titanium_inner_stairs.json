@@ -1,0 +1,8 @@
+{
+    "parent": "block/inner_stairs",
+    "textures": {
+        "bottom": "forgecraft:blocks/titanium_brick",
+        "top": "forgecraft:blocks/titanium_brick",
+        "side": "forgecraft:blocks/titanium_brick"
+    }
+}

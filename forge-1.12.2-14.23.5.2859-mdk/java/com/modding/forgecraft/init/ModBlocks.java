@@ -25,8 +25,8 @@ public class ModBlocks
 	public static Block fusion_furnace;
 	
 	public static int id;
-	public static Block[] listBlock = new Block[13];
-	public static Item[] listItem = new Item[13];
+	public static Block[] listBlock = new Block[17];
+	public static Item[] listItem = new Item[17];
 	
 	public static void initialization()
 	{

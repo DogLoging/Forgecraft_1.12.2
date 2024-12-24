@@ -1,0 +1,9 @@
+{
+    "parent": "block/stairs",
+    "textures":
+	{
+        "bottom": "forgecraft:blocks/copper_brick",
+        "top": "forgecraft:blocks/copper_brick",
+        "side": "forgecraft:blocks/copper_brick"
+    }
+}
