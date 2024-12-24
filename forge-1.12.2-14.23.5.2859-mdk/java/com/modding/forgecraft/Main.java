@@ -32,6 +32,8 @@ public class Main
 	public static void preInit(FMLPreInitializationEvent event)
 	{
 		ModBlocks.initialization();
+		ModBlocks.initializeHarvestLevels();
+		
 		RegistryTileEntity.initialization();
 		
 		CommonProxy.registerEvent(new ModRegistryEvent());

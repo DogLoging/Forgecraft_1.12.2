@@ -1,0 +1,22 @@
+{
+	"type": "minecraft:crafting_shaped",
+	"pattern":
+	[
+		"#",
+		"#"
+	],
+	
+	"key":
+	{
+		"#":
+		{
+			"item": "forgecraft:titanium_brick"
+		}
+	},
+	
+	"result":
+	{
+		"item": "forgecraft:titanium_pillar",
+		"count": 2
+	}
+}

@@ -1,0 +1,22 @@
+{
+	"variants":
+	{
+	   "axis=x":
+	   { 
+			"model": "forgecraft:adamantium_pillar",
+			"x": 90,
+			"y": 90
+		},
+		
+	    "axis=y":
+		{ 
+			"model": "forgecraft:adamantium_pillar"
+		},
+	    
+		"axis=z":
+		{ 
+			"model": "forgecraft:adamantium_pillar",
+			"x": 90
+		}
+	}
+}

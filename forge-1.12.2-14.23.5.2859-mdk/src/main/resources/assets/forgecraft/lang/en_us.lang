@@ -22,7 +22,10 @@ tile.steel_brick.name=Steel Brick
 tile.titanium_brick.name=Titanium Brick
 tile.adamantium_brick.name=Adamantium Brick
 
-tile.pillar.name=Bronze Pillar
+tile.copper_pillar.name=Bronze Pillar
+tile.steel_pillar.name=Steel Pillar
+tile.titanium_pillar.name=Titanium Pillar
+tile.adamantium_pillar.name=Adamantium Pillar
 
 tile.fusion_furnace.name=Fusion Furnace
 
