@@ -179,7 +179,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		return 64;
 	}
 	
-	public int getMaxFuel()
+	public static int getMaxFuel()
 	{
 		return 5000;
 	}
@@ -222,6 +222,10 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 			if(this.fuelFusionFurnace > getMaxFuel())
 			{
 				this.fuelFusionFurnace = getMaxFuel();
+			}
+			else if(this.fuelFusionFurnace < 0)
+			{
+				this.fuelFusionFurnace = 0;
 			}
 		}
 		
