@@ -275,11 +275,11 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 
 	private int getFusionTime(int fuelLevel)
 	{
-		if(fuelLevel > getMaxFuel() / 3)
+		if(fuelLevel > getMaxFuel() / 2)
 		{
 			return 50;
 		}
-		else if(fuelLevel > getMaxFuel() / 2)
+		else if(fuelLevel > getMaxFuel() / 4)
 		{
 			return 150;
 		}
