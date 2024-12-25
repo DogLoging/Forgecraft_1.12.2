@@ -202,6 +202,11 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		
 		if(fuelFusionFurnace < getMaxFuel())
 		{
+			if(this.fuelFusionFurnace < 0)
+			{
+				this.fuelFusionFurnace = 0;
+			}
+			
 			fuelFusionFurnace += getItemFuel(stack);
             
             if (this.isFuel())
@@ -218,19 +223,15 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
                     }
                 }
             }
-			
-			if(this.fuelFusionFurnace > getMaxFuel())
-			{
-				this.fuelFusionFurnace = getMaxFuel();
-			}
-			else if(this.fuelFusionFurnace < 0)
-			{
-				this.fuelFusionFurnace = 0;
-			}
 		}
 		
 		if(isFuel())
 		{
+			if(this.fuelFusionFurnace > getMaxFuel())
+			{
+				this.fuelFusionFurnace = getMaxFuel();
+			}
+			
 			BlockFusionFurnace.setState(true, world, pos);
 			
 			if(canFusion())
@@ -274,11 +275,11 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 
 	private int getFusionTime(int fuelLevel)
 	{
-		if(fuelLevel > getMaxFuel() / 2)
+		if(fuelLevel > getMaxFuel() / 3)
 		{
 			return 50;
 		}
-		else if(fuelLevel > getMaxFuel() / 3)
+		else if(fuelLevel > getMaxFuel() / 2)
 		{
 			return 150;
 		}

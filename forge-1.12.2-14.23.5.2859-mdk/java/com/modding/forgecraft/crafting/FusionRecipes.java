@@ -41,6 +41,11 @@ public class FusionRecipes
 	
 	public ItemStack getFusionResult(ItemStack slot_1, ItemStack slot_2)
 	{
+	    if (slot_1.isEmpty() && slot_2.isEmpty())
+	    {
+	        return ItemStack.EMPTY;
+	    }
+
 	    for (Entry<ItemStack, Map<ItemStack, ItemStack>> entry : this.fusionRecipeList.columnMap().entrySet())
 	    {
 	        if (this.comparationItem(slot_1, entry.getKey()))
@@ -66,7 +71,27 @@ public class FusionRecipes
 	        }
 	    }
 
-        return ItemStack.EMPTY;
+	    return ItemStack.EMPTY;
+	}
+	
+	public boolean isPartialIngredient(ItemStack item) 
+	{
+	    for (Entry<ItemStack, Map<ItemStack, ItemStack>> entry : this.fusionRecipeList.columnMap().entrySet()) 
+	    {
+	        if (this.comparationItem(item, entry.getKey())) 
+	        {
+	            return true;
+	        }
+
+	        for (ItemStack input : entry.getValue().keySet()) 
+	        {
+	            if (this.comparationItem(item, input)) 
+	            {
+	                return true;
+	            }
+	        }
+	    }
+	    return false;
 	}
 
 	private boolean comparationItem(ItemStack reult, ItemStack input)
