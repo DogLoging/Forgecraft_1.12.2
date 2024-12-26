@@ -139,39 +139,50 @@ public class ContainerFusionFurnace extends Container
             }
             else if (index != 2 && index != 1 && index != 0)
             {
-            	Slot slot_0 = this.inventorySlots.get(0);
-            	
-            	if(FusionRecipes.instance().isPartialIngredient(stack_1))
-            	{
-            	    if (!this.mergeItemStack(stack_1, 0, 2, false))
-            	    {
-            	        return ItemStack.EMPTY;
-            	    }
-            	}
-            	else if (!FusionRecipes.instance().getFusionResult(slot_0.getStack(), stack_1).isEmpty())
-            	{
-            	    if (!this.mergeItemStack(stack_1, 1, 2, false))
-            	    {
-            	        return ItemStack.EMPTY;
-            	    }
-            	}
-            	else if (TileEntityFusionFurnace.isItemFuel(stack_1))
+                Slot slot_0 = this.inventorySlots.get(0);
+
+                boolean handled = false;
+                
+                if (FusionRecipes.instance().isPartialIngredient(stack_1))
                 {
-                    if (!this.mergeItemStack(stack_1, 2, 3, false))
+                    if (this.mergeItemStack(stack_1, 0, 2, false))
                     {
-                        return ItemStack.EMPTY;
+                        handled = true;
                     }
                 }
-                else if (index >= 4 && index < 31)
+
+                if (!handled && !FusionRecipes.instance().getFusionResult(slot_0.getStack(), stack_1).isEmpty())
                 {
-                    if (!this.mergeItemStack(stack_1, 31, 40, false))
+                    if (this.mergeItemStack(stack_1, 1, 2, false))
                     {
-                        return ItemStack.EMPTY;
+                        handled = true;
                     }
                 }
-                else if (index >= 31 && index < 40 && !this.mergeItemStack(stack_1, 4, 40, false))
+
+                if (!handled && TileEntityFusionFurnace.isItemFuel(stack_1))
                 {
-                    return ItemStack.EMPTY;
+                    if (this.mergeItemStack(stack_1, 2, 3, false))
+                    {
+                        handled = true;
+                    }
+                }
+
+                if (!handled)
+                {
+                    if (index >= 4 && index < 31)
+                    {
+                        if (!this.mergeItemStack(stack_1, 31, 40, false))
+                        {
+                            return ItemStack.EMPTY;
+                        }
+                    }
+                    else if (index >= 31 && index < 40)
+                    {
+                        if (!this.mergeItemStack(stack_1, 4, 31, false))
+                        {
+                            return ItemStack.EMPTY;
+                        }
+                    }
                 }
             }
             else if (!this.mergeItemStack(stack_1, 4, 40, false))
