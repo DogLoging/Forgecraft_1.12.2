@@ -266,6 +266,8 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 				processTotalBurn = 0;
 			}
 		}
+		
+		markDirty();
 	}
 	
 	private int getProcessTime(ItemStack slot_1, ItemStack slot2)
