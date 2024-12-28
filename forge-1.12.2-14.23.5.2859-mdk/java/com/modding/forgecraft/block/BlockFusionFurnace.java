@@ -105,8 +105,8 @@ public class BlockFusionFurnace extends BlockContainer implements ITileEntityPro
 		}
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
-	@SuppressWarnings("incomplete-switch")
 	public void randomDisplayTick(IBlockState stateIn, World worldIn, BlockPos pos, Random rand)
 	{
 		if(stateIn.getValue(PROCESS))
@@ -117,7 +117,7 @@ public class BlockFusionFurnace extends BlockContainer implements ITileEntityPro
 			double d2 = (double)pos.getZ() + 0.5D;
 			double d4 = rand.nextDouble() * 0.6D - 0.3D;
 
-			if (rand.nextDouble() < 0.1D)
+			if (rand.nextDouble() < 0.5D)
 			{
 				worldIn.playSound((double)pos.getX() + 0.5D, (double)pos.getY(), (double)pos.getZ() + 0.5D, SoundEvents.BLOCK_FURNACE_FIRE_CRACKLE, SoundCategory.BLOCKS, 1.0F, 1.0F, false);
 			}
@@ -139,6 +139,9 @@ public class BlockFusionFurnace extends BlockContainer implements ITileEntityPro
 			case SOUTH:
 				worldIn.spawnParticle(EnumParticleTypes.SMOKE_NORMAL, d0 + d4, d1, d2 + 0.52D, 0.0D, 0.0D, 0.0D);
 				worldIn.spawnParticle(EnumParticleTypes.FLAME, d0 + d4, d1, d2 + 0.52D, 0.0D, 0.0D, 0.0D);
+				break;
+			default:
+				break;
 			}
 		}	   
 	}
