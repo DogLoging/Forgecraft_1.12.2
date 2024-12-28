@@ -1,0 +1,10 @@
+{
+	"parent": "block/half_slab",
+    
+	"textures":
+	{
+		"bottom": "forgecraft:blocks/adamantium_brick",
+		"top": "forgecraft:blocks/adamantium_brick",
+		"side": "forgecraft:blocks/adamantium_brick"
+	}
+}

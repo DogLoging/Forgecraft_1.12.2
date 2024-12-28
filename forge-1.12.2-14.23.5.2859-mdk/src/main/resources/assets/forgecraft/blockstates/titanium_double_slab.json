@@ -1,0 +1,14 @@
+{  
+	"variants": 
+	{
+		"half=bottom":
+		{
+			"model": "forgecraft:titanium_brick"
+		},
+        
+		"half=top":
+		{
+			"model": "forgecraft:titanium_brick"
+		}
+	}
+}

@@ -1,0 +1,14 @@
+{  
+	"variants": 
+	{
+		"half=bottom":
+		{
+			"model": "forgecraft:adamantium_half_slab"
+		},
+        
+		"half=top":
+		{
+			"model": "forgecraft:adamantium_upper_slab"
+		}
+	}
+}

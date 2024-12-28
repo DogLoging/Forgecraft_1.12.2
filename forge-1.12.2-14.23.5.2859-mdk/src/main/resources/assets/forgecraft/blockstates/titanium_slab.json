@@ -1,0 +1,14 @@
+{  
+	"variants": 
+	{
+		"half=bottom":
+		{
+			"model": "forgecraft:titanium_half_slab"
+		},
+        
+		"half=top":
+		{
+			"model": "forgecraft:titanium_upper_slab"
+		}
+	}
+}

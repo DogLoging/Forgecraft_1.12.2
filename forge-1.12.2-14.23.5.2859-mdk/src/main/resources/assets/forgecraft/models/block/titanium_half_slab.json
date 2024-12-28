@@ -1,0 +1,10 @@
+{
+	"parent": "block/half_slab",
+    
+	"textures":
+	{
+		"bottom": "forgecraft:blocks/titanium_brick",
+		"top": "forgecraft:blocks/titanium_brick",
+		"side": "forgecraft:blocks/titanium_brick"
+	}
+}

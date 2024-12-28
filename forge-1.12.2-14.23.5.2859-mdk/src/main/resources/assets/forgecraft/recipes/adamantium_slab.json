@@ -2,8 +2,6 @@
 	"type": "minecraft:crafting_shaped",
 	"pattern":
 	[
-		"#  ",
-		"## ",
 		"###"
 	],
 	
@@ -11,13 +9,14 @@
 	{
 		"#":
 		{
-			"item": "forgecraft:steel_brick"
+			"item": "forgecraft:adamantium_brick"
 		}
 	},
 	
 	"result":
 	{
-		"item": "forgecraft:steel_stair",
-		"count": 4
+		"item": "forgecraft:adamantium_slab",
+		"data": 0,
+		"count": 6
 	}
 }

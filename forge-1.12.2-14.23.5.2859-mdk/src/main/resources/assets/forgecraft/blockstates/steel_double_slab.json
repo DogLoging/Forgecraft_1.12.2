@@ -1,0 +1,14 @@
+{  
+	"variants": 
+	{
+		"half=bottom":
+		{
+			"model": "forgecraft:steel_brick"
+		},
+        
+		"half=top":
+		{
+			"model": "forgecraft:steel_brick"
+		}
+	}
+}

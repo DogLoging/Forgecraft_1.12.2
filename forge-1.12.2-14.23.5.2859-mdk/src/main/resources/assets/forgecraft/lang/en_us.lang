@@ -32,6 +32,16 @@ tile.steel_stair.name=Steel Stair
 tile.titanium_stair.name=Titanium Stair
 tile.adamantium_stair.name=Adamantium Stair
 
+tile.copper_slab.name=Bronze Slab
+tile.steel_slab.name=Steel Slab
+tile.titanium_slab.name=Titanium Slab
+tile.adamantium_slab.name=Adamantium Slab
+
+tile.copper_double_slab.name=Bronze Double Slab
+tile.steel_double_slab.name=Steel Double Slab
+tile.titanium_double_slab.name=Titanium Double Slab
+tile.adamantium_double_slab.name=Adamantium Double Slab
+
 tile.fusion_furnace.name=Fusion Furnace
 
 #GUI

@@ -1,0 +1,14 @@
+{  
+	"variants": 
+	{
+		"half=bottom":
+		{
+			"model": "forgecraft:copper_half_slab"
+		},
+        
+		"half=top":
+		{
+			"model": "forgecraft:copper_upper_slab"
+		}
+	}
+}

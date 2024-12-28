@@ -1,0 +1,14 @@
+{  
+	"variants": 
+	{
+		"half=bottom":
+		{
+			"model": "forgecraft:adamantium_brick"
+		},
+        
+		"half=top":
+		{
+			"model": "forgecraft:adamantium_brick"
+		}
+	}
+}

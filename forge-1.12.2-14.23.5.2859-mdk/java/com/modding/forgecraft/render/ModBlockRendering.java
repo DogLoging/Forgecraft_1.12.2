@@ -35,6 +35,15 @@ public class ModBlockRendering
 		register("titanium_stair", ModBlocks.titanium_stair);
 		register("adamantium_stair", ModBlocks.adamantium_stair);
 		
+		register("copper_slab", ModBlocks.copper_slab);
+		register("copper_double_slab", ModBlocks.copper_double_slab);
+		register("steel_slab", ModBlocks.steel_slab);
+		register("steel_double_slab", ModBlocks.steel_double_slab);
+		register("titanium_slab", ModBlocks.titanium_slab);
+		register("titanium_double_slab", ModBlocks.titanium_double_slab);
+		register("adamantium_slab", ModBlocks.adamantium_slab);
+		register("adamantium_double_slab", ModBlocks.adamantium_double_slab);
+		
 		register("fusion_furnace", ModBlocks.fusion_furnace);
 	}
 	

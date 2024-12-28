@@ -2,8 +2,6 @@
 	"type": "minecraft:crafting_shaped",
 	"pattern":
 	[
-		"#  ",
-		"## ",
 		"###"
 	],
 	
@@ -17,7 +15,8 @@
 	
 	"result":
 	{
-		"item": "forgecraft:steel_stair",
-		"count": 4
+		"item": "forgecraft:steel_slab",
+		"data": 0,
+		"count": 6
 	}
 }

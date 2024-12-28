@@ -1,0 +1,14 @@
+{  
+	"variants": 
+	{
+		"half=bottom":
+		{
+			"model": "forgecraft:steel_half_slab"
+		},
+        
+		"half=top":
+		{
+			"model": "forgecraft:steel_upper_slab"
+		}
+	}
+}
