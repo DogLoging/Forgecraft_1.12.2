@@ -1,4 +1,4 @@
-package com.modding.forgecraft.block.item;
+package com.modding.forgecraft.items;
 
 import java.util.List;
 import java.util.UUID;
@@ -126,38 +126,38 @@ public class ItemModArmor extends ItemArmor
             
             if (armor.attackDamage < 0)
             {
-                tooltip.add("§cDamage: " + armor.attackDamage);
+                tooltip.add("§c " + armor.attackDamage + "§c Damage");
             }
             else if(armor.attackDamage != 0)
             {
-            	tooltip.add("§9Damage: " + armor.attackDamage + "+");
+            	tooltip.add("§9 +" + armor.attackDamage + "§9 Damage");
             }
             
             if (armor.health < 0)
             {
-                tooltip.add("§cHealth: " + armor.health);
+                tooltip.add("§c " + armor.health + "§c Health");
             }
             else if(armor.health != 0)
             {
-            	tooltip.add("§9Health: " + armor.health + "+");
+            	tooltip.add("§9 +" + armor.health + "§9 Health");
             }
             
             if (armor.moveSpeed < 0)
             {
-                tooltip.add("§cMovespeed: " + (armor.moveSpeed / 100.0) + "%");
+                tooltip.add("§c " + (armor.moveSpeed / 100.0) + "%" + "§c Speed");
             }
             else if(armor.moveSpeed != 0)
             {
-            	tooltip.add("§9Movespeed: " + (armor.moveSpeed / 100.0) + "%");
+            	tooltip.add("§9 +" + (armor.moveSpeed / 100.0) + "%" + "§9 Speed");
             }
             
             if (armor.defense < 0)
             {
-                tooltip.add("§cDefense: " + armor.defense);
+                tooltip.add("§c " + armor.defense + "§c Armor");
             }
             else if(armor.defense != 0)
             {
-            	tooltip.add("§9Defense: " + armor.defense + "+");
+            	tooltip.add("§9 +" + armor.defense + "§9 Armor");
             }
         }
     }

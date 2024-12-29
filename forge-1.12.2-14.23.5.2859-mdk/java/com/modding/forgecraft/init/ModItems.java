@@ -1,7 +1,7 @@
 package com.modding.forgecraft.init;
 
 import com.modding.forgecraft.Main;
-import com.modding.forgecraft.block.item.ItemModArmor;
+import com.modding.forgecraft.items.ItemModArmor;
 import com.modding.forgecraft.items.ItemWeaponSword;
 
 import net.minecraft.creativetab.CreativeTabs;
@@ -42,22 +42,22 @@ public class ModItems
 		copper_boots = register("copper_boots", new ItemModArmor("copper_armor", ArmorMaterial.CHAIN, 3, -6, 50, 0, EntityEquipmentSlot.FEET));
 	
 		steel_sword = register("steel_sword", new ItemWeaponSword(ToolMaterial.IRON, 3.0F, 1561));
-		steel_helmet = register("steel_helmet", new ItemModArmor("steel_armor", ArmorMaterial.DIAMOND, 0, 30, -20, 3, EntityEquipmentSlot.HEAD));
-		steel_chestplate = register("steel_chestplate", new ItemModArmor("steel_armor", ArmorMaterial.DIAMOND, 0, 30, -20, 3, EntityEquipmentSlot.CHEST));
-		steel_leggings = register("steel_leggings", new ItemModArmor("steel_armor", ArmorMaterial.DIAMOND, 0, 30, -20, 3, EntityEquipmentSlot.LEGS));
-		steel_boots = register("steel_boots", new ItemModArmor("steel_armor", ArmorMaterial.DIAMOND, 0, 30, -20, 3, EntityEquipmentSlot.FEET));
+		steel_helmet = register("steel_helmet", new ItemModArmor("steel_armor", ArmorMaterial.DIAMOND, 0, 28, -20, 3, EntityEquipmentSlot.HEAD));
+		steel_chestplate = register("steel_chestplate", new ItemModArmor("steel_armor", ArmorMaterial.DIAMOND, 0, 28, -20, 3, EntityEquipmentSlot.CHEST));
+		steel_leggings = register("steel_leggings", new ItemModArmor("steel_armor", ArmorMaterial.DIAMOND, 0, 28, -20, 3, EntityEquipmentSlot.LEGS));
+		steel_boots = register("steel_boots", new ItemModArmor("steel_armor", ArmorMaterial.DIAMOND, 0, 28, -20, 3, EntityEquipmentSlot.FEET));
 		
 		titanium_sword = register("titanium_sword", new ItemWeaponSword(ToolMaterial.DIAMOND, 4.0F, 1561));
-		titanium_helmet = register("titanium_helmet", new ItemModArmor("titanium_armor", ArmorMaterial.IRON, 6, -4, 50, 0, EntityEquipmentSlot.HEAD));
-		titanium_chestplate = register("titanium_chestplate", new ItemModArmor("titanium_armor", ArmorMaterial.IRON, 6, -4, 50, 0, EntityEquipmentSlot.CHEST));
-		titanium_leggings = register("titanium_leggings", new ItemModArmor("titanium_armor", ArmorMaterial.IRON, 6, -4, 50, 0, EntityEquipmentSlot.LEGS));
-		titanium_boots = register("titanium_boots", new ItemModArmor("titanium_armor", ArmorMaterial.IRON, 6, -4, 50, 0, EntityEquipmentSlot.FEET));
+		titanium_helmet = register("titanium_helmet", new ItemModArmor("titanium_armor", ArmorMaterial.IRON, 6, -4, 55, 0, EntityEquipmentSlot.HEAD));
+		titanium_chestplate = register("titanium_chestplate", new ItemModArmor("titanium_armor", ArmorMaterial.IRON, 6, -4, 55, 0, EntityEquipmentSlot.CHEST));
+		titanium_leggings = register("titanium_leggings", new ItemModArmor("titanium_armor", ArmorMaterial.IRON, 6, -4, 55, 0, EntityEquipmentSlot.LEGS));
+		titanium_boots = register("titanium_boots", new ItemModArmor("titanium_armor", ArmorMaterial.IRON, 6, -4, 55, 0, EntityEquipmentSlot.FEET));
 		
 		adamantium_sword = register("adamantium_sword", new ItemWeaponSword(ToolMaterial.DIAMOND, 6.0F, 3122));
-		adamantium_helmet = register("adamantium_helmet", new ItemModArmor("adamantium_armor", ArmorMaterial.DIAMOND, 0, 35, -20, 6, EntityEquipmentSlot.HEAD));
-		adamantium_chestplate = register("adamantium_chestplate", new ItemModArmor("adamantium_armor", ArmorMaterial.DIAMOND, 0, 35, -20, 6, EntityEquipmentSlot.CHEST));
-		adamantium_leggings = register("adamantium_leggings", new ItemModArmor("adamantium_armor", ArmorMaterial.DIAMOND, 0, 35, -20, 6, EntityEquipmentSlot.LEGS));
-		adamantium_boots = register("adamantium_boots", new ItemModArmor("adamantium_armor", ArmorMaterial.DIAMOND, 0, 35, -20, 6, EntityEquipmentSlot.FEET));
+		adamantium_helmet = register("adamantium_helmet", new ItemModArmor("adamantium_armor", ArmorMaterial.DIAMOND, 0, 32, -20, 6, EntityEquipmentSlot.HEAD));
+		adamantium_chestplate = register("adamantium_chestplate", new ItemModArmor("adamantium_armor", ArmorMaterial.DIAMOND, 0, 32, -20, 6, EntityEquipmentSlot.CHEST));
+		adamantium_leggings = register("adamantium_leggings", new ItemModArmor("adamantium_armor", ArmorMaterial.DIAMOND, 0, 32, -20, 6, EntityEquipmentSlot.LEGS));
+		adamantium_boots = register("adamantium_boots", new ItemModArmor("adamantium_armor", ArmorMaterial.DIAMOND, 0, 32, -20, 6, EntityEquipmentSlot.FEET));
 		
 	}
 	
