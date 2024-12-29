@@ -161,7 +161,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		compound.setInteger("Progress", (short)timeProcess);
 		compound.setInteger("FinalProgress", (short)totalProcessTime);
 		
-		compound.setInteger("Fuel", this.fuelFusionFurnace);
+		compound.setInteger("Fuel", (short)this.fuelFusionFurnace);
 		
 		ItemStackHelper.saveAllItems(compound, this.fusionItemStacks);
 		
@@ -198,76 +198,96 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 	@Override
 	public void update()
 	{
-		ItemStack stack = this.fusionItemStacks.get(2);
+		boolean flag = this.isFuel();
+		boolean flag_1 = false;
 		
-		if(fuelFusionFurnace < getMaxFuel())
+		if(!world.isRemote)
 		{
-			if(this.fuelFusionFurnace < 0)
+			if(fuelFusionFurnace < getMaxFuel())
 			{
-				this.fuelFusionFurnace = 0;
-			}
-			
-			fuelFusionFurnace += getItemFuel(stack);
-            
-            if (this.isFuel())
-            {
-                if (!stack.isEmpty() && stack.getItem() != Items.BUCKET)
-                {
-                    Item item = stack.getItem();
-                    stack.shrink(1);
-                    
-                    if (stack.isEmpty())
-                    {
-                    	ItemStack item1 = item.getContainerItem(stack);
-                        this.fusionItemStacks.set(2, item1);
-                    }
-                }
-            }
-		}
-		
-		if(isFuel())
-		{
-			if(this.fuelFusionFurnace > getMaxFuel())
-			{
-				this.fuelFusionFurnace = getMaxFuel();
-			}
-			
-			BlockFusionFurnace.setState(true, world, pos);
-			
-			if(canFusion())
-			{
-				timeFusion += 1;
+				ItemStack stack = this.fusionItemStacks.get(2);
 				
-				if(this.timeFusion == this.totalFusionTime)
+				if(this.fuelFusionFurnace < 0)
 				{
-					this.processTotalBurn += 1;
-					this.timeFusion = 0;
-					this.totalFusionTime = getFusionTime(this.fuelFusionFurnace);
+					this.fuelFusionFurnace = 0;
 					
-					if(this.processTotalBurn == 10)
+					BlockFusionFurnace.setState(false, world, pos);
+				}
+				
+				fuelFusionFurnace += getItemFuel(stack);
+				
+	            if(this.isFuel())
+	            {
+	            	flag_1 = true;
+	            	
+	                if (!stack.isEmpty() && stack.getItem() != Items.BUCKET)
+	                {
+	                    Item item = stack.getItem();
+	                    stack.shrink(1);
+	                    
+	                    if (stack.isEmpty())
+	                    {
+	                    	ItemStack item1 = item.getContainerItem(stack);
+	                        this.fusionItemStacks.set(2, item1);
+	                    }
+	                }
+	            }
+			}
+			
+			if(isFuel())
+			{
+				if(this.fuelFusionFurnace > getMaxFuel())
+				{
+					this.fuelFusionFurnace = getMaxFuel();
+				}
+				
+				BlockFusionFurnace.setState(true, world, pos);
+				
+				if(canFusion())
+				{
+					timeFusion += 1;
+					
+					if(this.timeFusion == this.totalFusionTime)
 					{
-						timeProcess += 10;
-						fuelFusionFurnace -= 50;
-						this.processTotalBurn = 0;
+						this.processTotalBurn += 1;
+						this.timeFusion = 0;
+						this.totalFusionTime = getFusionTime(this.fuelFusionFurnace);
 						
-						if(this.timeProcess == totalProcessTime)
+						if(this.processTotalBurn == 10)
 						{
-							fusionItem();
-							totalProcessTime = getProcessTime(this.fusionItemStacks.get(0), this.fusionItemStacks.get(1));
-							timeProcess = 0;
+							timeProcess += 10;
+							fuelFusionFurnace -= 50;
+							this.processTotalBurn = 0;
+							
+							if(this.timeProcess == totalProcessTime)
+							{
+								fusionItem();
+								totalProcessTime = getProcessTime(this.fusionItemStacks.get(0), this.fusionItemStacks.get(1));
+								timeProcess = 0;
+								
+								flag_1 = true;
+							}
 						}
 					}
 				}
+				else
+				{
+					timeFusion = 0;
+					timeProcess = 0;
+					processTotalBurn = 0;
+				}
 			}
-			else
+			
+			if(flag != this.isFuel())
 			{
-				timeFusion = 0;
-				timeProcess = 0;
-				processTotalBurn = 0;
+				flag_1 = true;
 			}
 		}
 		
-		markDirty();
+		if(flag_1)
+		{
+			markDirty();
+		}
 	}
 	
 	private int getProcessTime(ItemStack slot_1, ItemStack slot2)

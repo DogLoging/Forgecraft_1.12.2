@@ -148,23 +148,18 @@ public class BlockFusionFurnace extends BlockContainer implements ITileEntityPro
 	
 	public static void setState(boolean active, World world, BlockPos pos)
 	{
-	    IBlockState state = world.getBlockState(pos);
-	    TileEntity tileEntity = world.getTileEntity(pos);
-
-	    if (active)
+		IBlockState state = world.getBlockState(pos);
+		TileEntity tileEntity = world.getTileEntity(pos);
+		
+		world.setBlockState(pos, ModBlocks.fusion_furnace.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(PROCESS, active), 3);
+		
+	    if (tileEntity != null)
 	    {
-	        world.setBlockState(pos, ModBlocks.fusion_furnace.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(PROCESS, true), 3);
-	    }
-	    else
-	    {
-	        world.setBlockState(pos, ModBlocks.fusion_furnace.getDefaultState().withProperty(FACING, state.getValue(FACING)).withProperty(PROCESS, false), 3);
+	        tileEntity.validate();
+	        world.setTileEntity(pos, tileEntity);
 	    }
 	    
-        if (tileEntity != null)
-        {
-            tileEntity.validate();
-            world.setTileEntity(pos, tileEntity);
-        }
+	    world.checkLight(pos);
 	}
 	
 	@Override
