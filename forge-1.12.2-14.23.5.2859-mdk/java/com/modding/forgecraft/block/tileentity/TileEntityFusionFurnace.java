@@ -161,7 +161,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 		compound.setInteger("Progress", (short)timeProcess);
 		compound.setInteger("FinalProgress", (short)totalProcessTime);
 		
-		compound.setInteger("Fuel", (short)this.fuelFusionFurnace);
+		compound.setInteger("Fuel", (short)fuelFusionFurnace);
 		
 		ItemStackHelper.saveAllItems(compound, this.fusionItemStacks);
 		

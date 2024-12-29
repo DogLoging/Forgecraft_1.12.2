@@ -74,23 +74,28 @@ public class ContainerFusionFurnace extends Container
 			{
 				icontainerListener.sendWindowProperty(this, 0, this.tileFusionFurnace.getField(0));
 			}
-			else if(this.timeProcess != this.tileFusionFurnace.getField(1))
+			
+			if(this.timeProcess != this.tileFusionFurnace.getField(1))
 			{
 				icontainerListener.sendWindowProperty(this, 1, this.tileFusionFurnace.getField(1));
 			}
-			else if(this.totalTimeFusion != this.tileFusionFurnace.getField(2))
+			
+			if(this.totalTimeFusion != this.tileFusionFurnace.getField(2))
 			{
 				icontainerListener.sendWindowProperty(this, 2, this.tileFusionFurnace.getField(2));
 			}
-			else if(this.totalProcessTime != this.tileFusionFurnace.getField(3))
+			
+			if(this.totalProcessTime != this.tileFusionFurnace.getField(3))
 			{
 				icontainerListener.sendWindowProperty(this, 3, this.tileFusionFurnace.getField(3));
 			}
-			else if(this.processTotalBurn != this.tileFusionFurnace.getField(4))
+			
+			if(this.processTotalBurn != this.tileFusionFurnace.getField(4))
 			{
 				icontainerListener.sendWindowProperty(this, 4, this.tileFusionFurnace.getField(4));
 			}
-			else if(this.fuelFusionFurnace != this.tileFusionFurnace.getField(5))
+			
+			if(this.fuelFusionFurnace != this.tileFusionFurnace.getField(5))
 			{
 				icontainerListener.sendWindowProperty(this, 5, this.tileFusionFurnace.getField(5));
 			}

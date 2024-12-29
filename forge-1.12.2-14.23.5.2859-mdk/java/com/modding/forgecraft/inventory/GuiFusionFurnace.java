@@ -8,7 +8,6 @@ import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
 public class GuiFusionFurnace extends GuiContainer
@@ -17,12 +16,12 @@ public class GuiFusionFurnace extends GuiContainer
     private final InventoryPlayer player;
     private final IInventory tileFusion;
     
-    public GuiFusionFurnace(InventoryPlayer parInventoryPlayer, IInventory parInventoryGrinder)
+    public GuiFusionFurnace(InventoryPlayer parInventoryPlayer, IInventory parInventoryFusion)
     {
-        super(new ContainerFusionFurnace(parInventoryPlayer,  parInventoryGrinder));
+        super(new ContainerFusionFurnace(parInventoryPlayer,  parInventoryFusion));
         
         player = parInventoryPlayer;
-        tileFusion = parInventoryGrinder;
+        tileFusion = parInventoryFusion;
     }
     
     @Override
@@ -84,9 +83,8 @@ public class GuiFusionFurnace extends GuiContainer
 
     private int getFuelLevel(int pixel)
     {
-        int currentFuel = this.tileFusion.getField(5);
-        int maxFuel = 5000 / 4;
+    	int maxFuel = 5000 / 4;
         
-        return maxFuel != 0 && currentFuel != 0 ? currentFuel * pixel / maxFuel : 0;
+        return this.tileFusion.getField(5) * pixel / maxFuel;
     }
 }
