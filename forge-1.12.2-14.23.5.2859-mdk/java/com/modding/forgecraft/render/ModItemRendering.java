@@ -23,6 +23,26 @@ public class ModItemRendering
 		register("steel_sword", ModItems.steel_sword);
 		register("titanium_sword", ModItems.titanium_sword);
 		register("adamantium_sword", ModItems.adamantium_sword);
+		
+		register("copper_helmet", ModItems.copper_helmet);
+		register("copper_chestplate", ModItems.copper_chestplate);
+		register("copper_leggings", ModItems.copper_leggings);
+		register("copper_boots", ModItems.copper_boots);
+		
+		register("steel_helmet", ModItems.steel_helmet);
+		register("steel_chestplate", ModItems.steel_chestplate);
+		register("steel_leggings", ModItems.steel_leggings);
+		register("steel_boots", ModItems.steel_boots);
+		
+		register("titanium_helmet", ModItems.titanium_helmet);
+		register("titanium_chestplate", ModItems.titanium_chestplate);
+		register("titanium_leggings", ModItems.titanium_leggings);
+		register("titanium_boots", ModItems.titanium_boots);
+		
+		register("adamantium_helmet", ModItems.adamantium_helmet);
+		register("adamantium_chestplate", ModItems.adamantium_chestplate);
+		register("adamantium_leggings", ModItems.adamantium_leggings);
+		register("adamantium_boots", ModItems.adamantium_boots);
 	}
 	
 	public static void register(String name, Item item)

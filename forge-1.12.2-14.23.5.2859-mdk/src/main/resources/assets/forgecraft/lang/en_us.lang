@@ -10,6 +10,26 @@ item.steel_sword.name=Steel Sword
 item.titanium_sword.name=Titanium Sword
 item.adamantium_sword.name=Adamantium Sword
 
+item.copper_helmet.name=Bronze Helmet
+item.copper_chestplate.name=Bronze Chestplate
+item.copper_leggings.name=Bronze Leggings
+item.copper_boots.name=Bronze Boots
+
+item.steel_helmet.name=Steel Helmet
+item.steel_chestplate.name=Steel Chestplate
+item.steel_leggings.name=Steel Leggings
+item.steel_boots.name=Steel Boots
+
+item.titanium_helmet.name=Titanium Helmet
+item.titanium_chestplate.name=Titanium Chestplate
+item.titanium_leggings.name=Titanium Leggings
+item.titanium_boots.name=Titanium Boots
+
+item.adamantium_helmet.name=Adamantium Helmet
+item.adamantium_chestplate.name=Adamantium Chestplate
+item.adamantium_leggings.name=Adamantium Leggings
+item.adamantium_boots.name=Adamantium Boots
+
 #Block
 
 tile.copper_block.name=Bronze Block

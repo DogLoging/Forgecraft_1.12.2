@@ -93,6 +93,16 @@ public class ModBlocks
 		titanium_stair.setHarvestLevel("pickaxe", 3);
 		adamantium_stair.setHarvestLevel("pickaxe", 3);
 		
+		copper_slab.setHarvestLevel("pickaxe", 1);
+		steel_slab.setHarvestLevel("pickaxe", 2);
+		titanium_slab.setHarvestLevel("pickaxe", 3);
+		adamantium_slab.setHarvestLevel("pickaxe", 3);
+		
+		copper_double_slab.setHarvestLevel("pickaxe", 1);
+		steel_double_slab.setHarvestLevel("pickaxe", 2);
+		titanium_double_slab.setHarvestLevel("pickaxe", 3);
+		adamantium_double_slab.setHarvestLevel("pickaxe", 3);
+		
 		fusion_furnace.setHarvestLevel("pickaxe", 3);
 	}
 	
