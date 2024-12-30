@@ -77,7 +77,7 @@ public class ItemModArmor extends ItemArmor
     private void applyAttributes(EntityPlayer player)
     {
         boolean hasFullSet = isFullArmorSet(player);
-
+        
         if (hasFullSet)
         {
             double currentArmor = player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ARMOR).getBaseValue();
