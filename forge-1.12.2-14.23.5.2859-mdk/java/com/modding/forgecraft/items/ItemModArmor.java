@@ -34,6 +34,11 @@ public class ItemModArmor extends ItemArmor
         this.defense = defense;
 	}
 	
+    public String getName()
+    {
+        return armorName;
+    }
+	
     @Override
     public String getArmorTexture(ItemStack stack, Entity entity, EntityEquipmentSlot slot, String type)
     {
@@ -50,8 +55,16 @@ public class ItemModArmor extends ItemArmor
         ItemStack legs = player.getItemStackFromSlot(EntityEquipmentSlot.LEGS);
         ItemStack feet = player.getItemStackFromSlot(EntityEquipmentSlot.FEET);
         
-        return head.getItem() instanceof ItemModArmor && chest.getItem() instanceof ItemModArmor && legs.getItem() instanceof ItemModArmor && feet.getItem() instanceof ItemModArmor;
+        return head.getItem() instanceof ItemModArmor && 
+        	   chest.getItem() instanceof ItemModArmor && 
+        	   legs.getItem() instanceof ItemModArmor && 
+        	   feet.getItem() instanceof ItemModArmor && 
+        	   ((ItemModArmor) head.getItem()).getName().equals(armorName) &&
+        	   ((ItemModArmor) chest.getItem()).getName().equals(armorName) &&
+        	   ((ItemModArmor) legs.getItem()).getName().equals(armorName) &&
+        	   ((ItemModArmor) feet.getItem()).getName().equals(armorName);
     }
+    
     @Override
     public void onArmorTick(World world, EntityPlayer player, ItemStack stack)
     {
