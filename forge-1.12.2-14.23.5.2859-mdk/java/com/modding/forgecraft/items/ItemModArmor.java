@@ -139,11 +139,11 @@ public class ItemModArmor extends ItemArmor
             
             if (armor.attackDamage < 0)
             {
-                tooltip.add("§c " + armor.attackDamage + "§c Damage");
+                tooltip.add("§c " + armor.attackDamage + "§c Attack Damage");
             }
             else if(armor.attackDamage != 0)
             {
-            	tooltip.add("§9 +" + armor.attackDamage + "§9 Damage");
+            	tooltip.add("§9 +" + armor.attackDamage + "§9 Attack Damage");
             }
             
             if (armor.health < 0)
