@@ -253,7 +253,7 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 						this.timeFusion = 0;
 						this.totalFusionTime = getFusionTime(this.fuelFusionFurnace);
 						
-						if(this.processTotalBurn == 10)
+						if(this.processTotalBurn == 8)
 						{
 							timeProcess += 10;
 							fuelFusionFurnace -= 50;
@@ -297,7 +297,11 @@ public class TileEntityFusionFurnace extends TileEntityLockable implements IInve
 
 	private int getFusionTime(int fuelLevel)
 	{
-		if(fuelLevel > getMaxFuel() / 2)
+		if(fuelLevel > getMaxFuel() - (getMaxFuel() / 5))
+		{
+			return 25;
+		}
+		else if(fuelLevel > getMaxFuel() / 2)
 		{
 			return 50;
 		}
