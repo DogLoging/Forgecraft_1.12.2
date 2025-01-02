@@ -80,10 +80,16 @@ public class ItemModArmor extends ItemArmor
         
         if (hasFullSet)
         {
-            double currentArmor = player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ARMOR).getBaseValue();
-            double newArmorValue = currentArmor + this.defense;
-            player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ARMOR).setBaseValue(newArmorValue);
-        	
+        	if(this.defense != 0)
+        	{
+	            double currentArmor = player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ARMOR).getBaseValue();
+	            double newArmorValue = currentArmor + this.defense;
+	            player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ARMOR).setBaseValue(newArmorValue);
+	        	
+	            double currentArmorToughness = player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ARMOR_TOUGHNESS).getBaseValue();
+	            double newArmorToughnessValue = currentArmorToughness + (this.defense - 1);
+	            player.getAttributeMap().getAttributeInstance(SharedMonsterAttributes.ARMOR_TOUGHNESS).setBaseValue(newArmorToughnessValue);
+	        }
             addAttributeModifier(player, SharedMonsterAttributes.ATTACK_DAMAGE, "ArmorAttackDamage", attackDamage, 0);
             addAttributeModifier(player, SharedMonsterAttributes.MAX_HEALTH, "ArmorMaxHealth", health, 0);
             addAttributeModifier(player, SharedMonsterAttributes.MOVEMENT_SPEED, "ArmorMoveSpeed", moveSpeed / 100.0, 1);
@@ -162,6 +168,15 @@ public class ItemModArmor extends ItemArmor
             else if(armor.moveSpeed != 0)
             {
             	tooltip.add("§9 +" + (armor.moveSpeed / 100.0) + "%" + "§9 Speed");
+            }
+            
+            if (armor.defense < 0)
+            {
+                tooltip.add("§c " + (armor.defense - 1) + "§c Armor Toughness");
+            }
+            else if(armor.defense != 0)
+            {
+            	tooltip.add("§9 +" + (armor.defense - 1) + "§9 Armor Toughness");
             }
             
             if (armor.defense < 0)
